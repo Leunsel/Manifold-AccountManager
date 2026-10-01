@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="App">
+      <UniqueIdentifier>{6f1a2c10-0001-4a11-9f01-2b8c4d5e6f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{6f1a2c10-0008-4a11-9f01-2b8c4d5e6f08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{6f1a2c10-0002-4a11-9f01-2b8c4d5e6f02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Generated">
+      <UniqueIdentifier>{6f1a2c10-0003-4a11-9f01-2b8c4d5e6f03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{6f1a2c10-0004-4a11-9f01-2b8c4d5e6f04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor">
+      <UniqueIdentifier>{6f1a2c10-0005-4a11-9f01-2b8c4d5e6f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\Dear ImGui">
+      <UniqueIdentifier>{6f1a2c10-0006-4a11-9f01-2b8c4d5e6f06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\Dear ImGui\backends">
+      <UniqueIdentifier>{6f1a2c10-0007-4a11-9f01-2b8c4d5e6f07}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\App\Application.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App\BunkerTheme.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\BunkerFonts.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\PlatformIcon.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App\Clipboard.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App\ProcessHardening.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App\VaultSession.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Codec.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Base32.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Crypto.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\FileSystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\GermanText.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Hmac.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Sha1.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Model.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Otp.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\OtpUri.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Mutate.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Search.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\LockPolicy.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\PasswordStrength.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Random.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Redact.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Generator.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Result.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Secret.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SecretChars.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\VaultFile.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\ImGuiSecure.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\ScreenMain.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\ScreenUnlock.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\SecretInput.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\EntryEditor.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui.cpp">
+      <Filter>Vendor\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui_draw.cpp">
+      <Filter>Vendor\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui_tables.cpp">
+      <Filter>Vendor\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui_widgets.cpp">
+      <Filter>Vendor\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui_demo.cpp">
+      <Filter>Vendor\Dear ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>Vendor\Dear ImGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>Vendor\Dear ImGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Backup.cpp" />
+    <ClCompile Include="Source\Core\BackupRun.cpp" />
+    <ClCompile Include="Source\Core\CsvExport.cpp" />
+    <ClCompile Include="Source\Core\FieldRole.cpp" />
+    <ClCompile Include="Source\Core\FieldTemplate.cpp" />
+    <ClCompile Include="Source\Core\ListKind.cpp" />
+    <ClCompile Include="Source\Core\Palette.cpp" />
+    <ClCompile Include="Source\Core\Age.cpp" />
+    <ClCompile Include="Source\Core\Folder.cpp" />
+    <ClCompile Include="Source\Core\SaveGuard.cpp" />
+    <ClCompile Include="Source\Core\SettingsPolicy.cpp" />
+    <ClCompile Include="Source\Core\Language.cpp" />
+    <ClCompile Include="Source\Core\LinkSafety.cpp" />
+    <ClCompile Include="Source\Core\PathSafety.cpp" />
+    <ClCompile Include="Source\UI\OpenLink.cpp" />
+    <ClCompile Include="Source\UI\SaveFileDialog.cpp" />
+    <ClCompile Include="Source\UI\Shortcuts.cpp" />
+    <ClCompile Include="Source\UI\Trash.cpp" />
+    <ClCompile Include="Source\UI\Motion.cpp" />
+    <ClCompile Include="Source\UI\Card.cpp" />
+    <ClCompile Include="Source\UI\ScreenSettings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Resource.h" />
+    <ClInclude Include="Source\App\Application.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\BunkerTheme.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\BunkerFonts.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\PlatformIcon.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\Clipboard.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\ProcessHardening.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\VaultSession.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Codec.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Base32.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Crypto.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Endian.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\GermanText.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Hmac.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Sha1.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Model.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Otp.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\OtpUri.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Mutate.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Search.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\LockPolicy.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\PasswordStrength.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Random.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Redact.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Generator.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Result.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Secret.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SecretChars.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\VaultFile.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\VaultFormat.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\ImGuiSecure.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\ScreenMain.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\ScreenUnlock.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\SecretInput.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\EntryEditor.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Generated\CryptoKat.h">
+      <Filter>UI\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Generated\FaIcons.h">
+      <Filter>UI\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Generated\FaBrands.h">
+      <Filter>UI\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Generated\FaSymbols.h">
+      <Filter>UI\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Backup.h" />
+    <ClInclude Include="Source\Core\BackupRun.h" />
+    <ClInclude Include="Source\Core\CsvExport.h" />
+    <ClInclude Include="Source\Core\FieldRole.h" />
+    <ClInclude Include="Source\Core\FieldTemplate.h" />
+    <ClInclude Include="Source\Core\ListKind.h" />
+    <ClInclude Include="Source\Core\Palette.h" />
+    <ClInclude Include="Source\Core\Folder.h" />
+    <ClInclude Include="Source\Core\FileSystem.h" />
+    <ClInclude Include="Source\Core\SaveGuard.h" />
+    <ClInclude Include="Source\Core\SettingsPolicy.h" />
+    <ClInclude Include="Source\Core\Language.h" />
+    <ClInclude Include="Source\Lang\Strings.h" />
+    <ClInclude Include="Source\Lang\Languages.h" />
+    <ClInclude Include="Source\Lang\En.h" />
+    <ClInclude Include="Source\Lang\De.h" />
+    <ClInclude Include="Source\Core\LinkSafety.h" />
+    <ClInclude Include="Source\Core\PathSafety.h" />
+    <ClInclude Include="Source\UI\OpenLink.h" />
+    <ClInclude Include="Source\UI\Modal.h" />
+    <ClInclude Include="Source\UI\Tooltip.h" />
+    <ClInclude Include="Source\UI\ScrollArea.h" />
+    <ClInclude Include="Source\UI\Trash.h" />
+    <ClInclude Include="Source\UI\Motion.h" />
+    <ClInclude Include="Source\UI\MotionCurve.h" />
+    <ClInclude Include="Source\UI\Card.h" />
+    <ClInclude Include="Source\Core\Age.h" />
+    <ClInclude Include="Source\UI\SaveFileDialog.h" />
+    <ClInclude Include="Source\UI\Shortcuts.h" />
+    <ClInclude Include="Source\UI\ScreenSettings.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\App.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\App.manifest">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Source\Lang\Strings.def" />
+  </ItemGroup>
+</Project>

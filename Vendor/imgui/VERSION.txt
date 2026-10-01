@@ -1,0 +1,21 @@
+﻿Dear ImGui - vendored dependency
+================================
+Upstream : https://github.com/ocornut/imgui
+Tag      : v1.92.9b-docking
+Commit   : b48d1afbe8ee8b238e2961dc363a949dd7304e23
+#define IMGUI_VERSION       "1.92.9b"
+#define IMGUI_VERSION_NUM   19291
+
+Branch note
+-----------
+This is the 'docking' branch, which is where upstream ships multi-viewport and
+docking support. IMGUI_HAS_DOCK and IMGUI_HAS_VIEWPORT are defined here and are
+NOT defined on master, so any code guarded by them silently disappears if this
+tree is ever swapped for a master build.
+
+The upstream .git directory was intentionally removed: this is a frozen copy,
+not a submodule, so a plain 'git clone' of Manifold-AccountManager is complete
+and buildable with no extra steps.
+
+To update: replace this directory with a fresh checkout of a newer *-docking
+tag and update this file. Do not cherry-pick individual files.

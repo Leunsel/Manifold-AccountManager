@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{ca0276d3-41da-4839-aae3-3c65628e1bfe}</ProjectGuid>
+    <RootNamespace>ManifoldVault</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <TargetName>Vault</TargetName>
+
+    <VendorDir>$(ProjectDir)..\Vendor\</VendorDir>
+
+    <OutDir>$(ProjectDir)..\x64\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\x64\obj\$(Configuration)\$(ProjectName)\</IntDir>
+
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(ProjectDir)..\'))</RepoRoot>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <SDLCheck>true</SDLCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+
+      <AdditionalOptions>/utf-8 /d1trimfile:"$(RepoRoot)\" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(VendorDir)imgui;$(VendorDir)imgui\backends;$(VendorDir)libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NOMINMAX;SODIUM_STATIC;IMGUI_IMPL_WIN32_DISABLE_GAMEPAD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+
+      <AdditionalOptions>/PDBALTPATH:%_PDB% %(AdditionalOptions)</AdditionalOptions>
+      <LinkControlFlowGuard>true</LinkControlFlowGuard>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <CETCompat>true</CETCompat>
+
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dwmapi.lib;advapi32.lib;ole32.lib;shell32.lib;$(VendorDir)libsodium\lib\$(Platform)\$(Configuration)\libsodium.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+
+      <EnableDpiAwareness>false</EnableDpiAwareness>
+      <AdditionalManifestFiles>$(ProjectDir)Resources\App.manifest</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp" />
+
+    <ClCompile Include="Source\Core\AccentColour.cpp" />
+    <ClCompile Include="Source\Core\Backup.cpp" />
+    <ClCompile Include="Source\Core\BackupRun.cpp" />
+    <ClCompile Include="Source\Core\Codec.cpp" />
+    <ClCompile Include="Source\Core\CsvExport.cpp" />
+    <ClCompile Include="Source\Core\CsvImport.cpp" />
+    <ClCompile Include="Source\Core\Base32.cpp" />
+    <ClCompile Include="Source\Core\Crypto.cpp" />
+    <ClCompile Include="Source\Core\FieldRole.cpp" />
+    <ClCompile Include="Source\Core\FieldTemplate.cpp" />
+    <ClCompile Include="Source\Core\ListKind.cpp" />
+    <ClCompile Include="Source\Core\Palette.cpp" />
+    <ClCompile Include="Source\Core\Age.cpp" />
+    <ClCompile Include="Source\Core\Folder.cpp" />
+    <ClCompile Include="Source\Core\FileSystem.cpp" />
+    <ClCompile Include="Source\Core\GermanText.cpp" />
+    <ClCompile Include="Source\Core\Hmac.cpp" />
+    <ClCompile Include="Source\Core\Sha1.cpp" />
+    <ClCompile Include="Source\Core\Model.cpp" />
+    <ClCompile Include="Source\Core\Otp.cpp" />
+    <ClCompile Include="Source\Core\OtpUri.cpp" />
+    <ClCompile Include="Source\Core\Mutate.cpp" />
+    <ClCompile Include="Source\Core\SaveGuard.cpp" />
+    <ClCompile Include="Source\Core\Search.cpp" />
+    <ClCompile Include="Source\Core\SettingsPolicy.cpp" />
+    <ClCompile Include="Source\Core\VaultAudit.cpp" />
+    <ClCompile Include="Source\Core\VaultFile.cpp" />
+    <ClCompile Include="Source\Core\Result.cpp" />
+    <ClCompile Include="Source\Core\Secret.cpp" />
+    <ClCompile Include="Source\Core\SecretChars.cpp" />
+    <ClCompile Include="Source\Core\SecureString.cpp" />
+    <ClCompile Include="Source\App\Application.cpp" />
+    <ClCompile Include="Source\App\BunkerTheme.cpp" />
+    <ClCompile Include="Source\UI\BunkerFonts.cpp" />
+    <ClCompile Include="Source\UI\PlatformIcon.cpp" />
+    <ClCompile Include="Source\UI\IconButton.cpp" />
+    <ClCompile Include="Source\App\Clipboard.cpp" />
+    <ClCompile Include="Source\App\ProcessHardening.cpp" />
+    <ClCompile Include="Source\App\VaultSession.cpp" />
+    <ClCompile Include="Source\Core\Language.cpp" />
+    <ClCompile Include="Source\Core\LinkSafety.cpp" />
+    <ClCompile Include="Source\Core\LockPolicy.cpp" />
+    <ClCompile Include="Source\Core\PasswordHistory.cpp" />
+    <ClCompile Include="Source\Core\PasswordStrength.cpp" />
+    <ClCompile Include="Source\Core\PathSafety.cpp" />
+    <ClCompile Include="Source\Core\Random.cpp" />
+    <ClCompile Include="Source\Core\Redact.cpp" />
+    <ClCompile Include="Source\Core\Generator.cpp" />
+    <ClCompile Include="Source\UI\ImGuiSecure.cpp" />
+    <ClCompile Include="Source\UI\ScreenAudit.cpp" />
+    <ClCompile Include="Source\UI\ScreenMain.cpp" />
+    <ClCompile Include="Source\UI\OpenLink.cpp" />
+    <ClCompile Include="Source\UI\SaveFileDialog.cpp" />
+    <ClCompile Include="Source\UI\Shortcuts.cpp" />
+    <ClCompile Include="Source\UI\Trash.cpp" />
+    <ClCompile Include="Source\UI\Motion.cpp" />
+    <ClCompile Include="Source\UI\Card.cpp" />
+    <ClCompile Include="Source\UI\ScreenSettings.cpp" />
+    <ClCompile Include="Source\UI\ScreenUnlock.cpp" />
+    <ClCompile Include="Source\UI\SecretInput.cpp" />
+    <ClCompile Include="Source\UI\EntryEditor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Resource.h" />
+    <ClInclude Include="Source\Core\AccentColour.h" />
+    <ClInclude Include="Source\Core\Backup.h" />
+    <ClInclude Include="Source\Core\BackupRun.h" />
+    <ClInclude Include="Source\Core\Codec.h" />
+    <ClInclude Include="Source\Core\CsvExport.h" />
+    <ClInclude Include="Source\Core\CsvImport.h" />
+    <ClInclude Include="Source\Core\Base32.h" />
+    <ClInclude Include="Source\Core\Crypto.h" />
+    <ClInclude Include="Source\Core\FieldRole.h" />
+    <ClInclude Include="Source\Core\FieldTemplate.h" />
+    <ClInclude Include="Source\Core\ListKind.h" />
+    <ClInclude Include="Source\Core\Palette.h" />
+    <ClInclude Include="Source\Core\Folder.h" />
+    <ClInclude Include="Source\Core\FileSystem.h" />
+    <ClInclude Include="Source\Core\GermanText.h" />
+    <ClInclude Include="Source\Core\Hmac.h" />
+    <ClInclude Include="Source\Core\Sha1.h" />
+    <ClInclude Include="Source\Core\Model.h" />
+    <ClInclude Include="Source\Core\Otp.h" />
+    <ClInclude Include="Source\Core\OtpUri.h" />
+    <ClInclude Include="Source\Core\Mutate.h" />
+    <ClInclude Include="Source\Core\SaveGuard.h" />
+    <ClInclude Include="Source\Core\Search.h" />
+    <ClInclude Include="Source\Core\SettingsPolicy.h" />
+    <ClInclude Include="Source\Core\VaultAudit.h" />
+    <ClInclude Include="Source\Core\VaultFile.h" />
+    <ClInclude Include="Source\Core\VaultFormat.h" />
+    <ClInclude Include="Source\Core\Endian.h" />
+    <ClInclude Include="Source\Core\Result.h" />
+    <ClInclude Include="Source\Core\Secret.h" />
+    <ClInclude Include="Source\Core\SecretChars.h" />
+    <ClInclude Include="Source\Core\SecureString.h" />
+    <ClInclude Include="Source\Generated\CryptoKat.h" />
+    <ClInclude Include="Source\App\Application.h" />
+    <ClInclude Include="Source\App\BunkerTheme.h" />
+    <ClInclude Include="Source\UI\BunkerFonts.h" />
+    <ClInclude Include="Source\UI\PlatformIcon.h" />
+    <ClInclude Include="Source\UI\IconButton.h" />
+    <ClInclude Include="Source\UI\Modal.h" />
+    <ClInclude Include="Source\UI\Tooltip.h" />
+    <ClInclude Include="Source\UI\ScrollArea.h" />
+    <ClInclude Include="Source\UI\Trash.h" />
+    <ClInclude Include="Source\UI\Motion.h" />
+    <ClInclude Include="Source\UI\MotionCurve.h" />
+    <ClInclude Include="Source\UI\Card.h" />
+    <ClInclude Include="Source\Core\Age.h" />
+    <ClInclude Include="Source\UI\IconGeometry.h" />
+    <ClInclude Include="Source\App\Clipboard.h" />
+    <ClInclude Include="Source\App\ProcessHardening.h" />
+    <ClInclude Include="Source\App\VaultSession.h" />
+    <ClInclude Include="Source\Core\Language.h" />
+    <ClInclude Include="Source\Lang\Strings.h" />
+    <ClInclude Include="Source\Lang\Languages.h" />
+    <ClInclude Include="Source\Lang\En.h" />
+    <ClInclude Include="Source\Lang\De.h" />
+    <None Include="Source\Lang\Strings.def" />
+    <ClInclude Include="Source\Core\LinkSafety.h" />
+    <ClInclude Include="Source\Core\LockPolicy.h" />
+    <ClInclude Include="Source\Core\PasswordHistory.h" />
+    <ClInclude Include="Source\Core\PasswordStrength.h" />
+    <ClInclude Include="Source\Core\PathSafety.h" />
+    <ClInclude Include="Source\Core\Random.h" />
+    <ClInclude Include="Source\Core\Redact.h" />
+    <ClInclude Include="Source\Core\Generator.h" />
+    <ClInclude Include="Source\UI\ImGuiSecure.h" />
+    <ClInclude Include="Source\UI\ScreenAudit.h" />
+    <ClInclude Include="Source\UI\ScreenMain.h" />
+    <ClInclude Include="Source\UI\OpenLink.h" />
+    <ClInclude Include="Source\UI\SaveFileDialog.h" />
+    <ClInclude Include="Source\UI\Shortcuts.h" />
+    <ClInclude Include="Source\UI\ScreenSettings.h" />
+    <ClInclude Include="Source\UI\ScreenUnlock.h" />
+    <ClInclude Include="Source\UI\SecretInput.h" />
+    <ClInclude Include="Source\UI\EntryEditor.h" />
+    <ClInclude Include="Source\Generated\FaIcons.h" />
+    <ClInclude Include="Source\Generated\FaBrands.h" />
+    <ClInclude Include="Source\Generated\FaSymbols.h" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClCompile Include="..\Vendor\imgui\imgui.cpp">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui_draw.cpp">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui_tables.cpp">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\imgui_widgets.cpp">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\backends\imgui_impl_win32.cpp">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\imgui\backends\imgui_impl_dx11.cpp">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+    </ClCompile>
+
+    <ClCompile Include="..\Vendor\imgui\imgui_demo.cpp">
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\App.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\App.manifest" />
+  </ItemGroup>
+
+  <Target Name="ManifoldRejectNonX64" BeforeTargets="PrepareForBuild" Condition="'$(Platform)' != 'x64'">
+    <Error Text="Manifold-Vault builds for x64 only. Select the x64 platform in the toolbar." />
+  </Target>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

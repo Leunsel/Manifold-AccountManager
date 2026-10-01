@@ -1,0 +1,85 @@
+# --- Secrets: never commit a vault, a key file or an export ----------------
+*.vault
+*.vault.bak
+*.vault.tmp
+*.mavault
+vaults/
+Vaults/
+*.key
+secrets.json
+*.export.json
+*.export.csv
+
+# --- Visual Studio ---------------------------------------------------------
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.VC.VC.opendb
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+
+# --- Build output (anchored, so Vendor/libsodium/lib/x64/ stays tracked) ---
+/x64/
+/Win32/
+/ARM64/
+/Debug/
+/Release/
+/bin/
+/obj/
+/out/
+/build/
+Manifold-Vault/x64/
+Manifold-Vault/Win32/
+Manifold-Vault/ARM64/
+Manifold-Vault/Debug/
+Manifold-Vault/Release/
+Tests/x64/
+Tests/Debug/
+Tests/Release/
+
+*.obj
+*.pch
+*.ilk
+*.idb
+*.exp
+*.tlog
+*.lastbuildstate
+*.unsuccessfulbuild
+*.log
+
+# --- Runtime and tool state ------------------------------------------------
+imgui.ini
+manifold.ini
+*.local.json
+__pycache__/
+.claude/
+
+# --- Misc ------------------------------------------------------------------
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.rfc-cache/
+
+# --- Private search list for Tools/check_no_personal.py ---------------------
+Tools/personal-needles.txt
+
+# --- Old screenshots (superseded by Docs/screenshots/) ----------------------
+Docs/Screenshot-*.png
+
+# --- Dear ImGui: only what the build uses (sources, Win32 + DX11 backends) --
+Vendor/imgui/.github/
+Vendor/imgui/docs/
+Vendor/imgui/examples/
+Vendor/imgui/misc/
+Vendor/imgui/backends/*
+!Vendor/imgui/backends/imgui_impl_win32.*
+!Vendor/imgui/backends/imgui_impl_dx11.*

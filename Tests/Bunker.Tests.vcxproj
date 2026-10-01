@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{7b3e5a21-9c4d-4f18-b6a2-1d0e8f3c5a47}</ProjectGuid>
+    <RootNamespace>BunkerTests</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+
+  <PropertyGroup>
+    <TargetName>Bunker.Tests</TargetName>
+    <VendorDir>$(ProjectDir)..\Vendor\</VendorDir>
+    <AppSourceDir>$(ProjectDir)..\Manifold-Vault\Source\</AppSourceDir>
+
+    <OutDir>$(ProjectDir)..\x64\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\x64\obj\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <SDLCheck>true</SDLCheck>
+
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(AppSourceDir);$(ProjectDir);$(VendorDir)libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CONSOLE;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NOMINMAX;SODIUM_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/PDBALTPATH:%_PDB% %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>advapi32.lib;$(VendorDir)libsodium\lib\$(Platform)\$(Configuration)\libsodium.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TestRunner.cpp" />
+    <ClCompile Include="Test_Codec.cpp" />
+    <ClCompile Include="Test_Document.cpp" />
+    <ClCompile Include="Test_Crypto.cpp" />
+    <ClCompile Include="Test_CsvExport.cpp" />
+    <ClCompile Include="Test_CsvImport.cpp" />
+    <ClCompile Include="Test_FieldRole.cpp" />
+    <ClCompile Include="Test_Folder.cpp" />
+    <ClCompile Include="Test_Favourite.cpp" />
+    <ClCompile Include="Test_Hardening.cpp" />
+    <ClCompile Include="Test_IconGeometry.cpp" />
+    <ClCompile Include="Test_AccentColour.cpp" />
+    <ClCompile Include="Test_Backup.cpp" />
+    <ClCompile Include="Test_BackupRun.cpp" />
+    <ClCompile Include="Test_Base32.cpp" />
+    <ClCompile Include="Test_Redact.cpp" />
+    <ClCompile Include="Test_Generator.cpp" />
+    <ClCompile Include="Test_Language.cpp" />
+    <ClCompile Include="Test_LinkSafety.cpp" />
+    <ClCompile Include="Test_LockPolicy.cpp" />
+    <ClCompile Include="Test_Mutate.cpp" />
+    <ClCompile Include="Test_SaveGuard.cpp" />
+    <ClCompile Include="Test_Search.cpp" />
+    <ClCompile Include="Test_Settings.cpp" />
+    <ClCompile Include="Test_Text.cpp" />
+    <ClCompile Include="Test_PathSafety.cpp" />
+    <ClCompile Include="Test_Otp.cpp" />
+    <ClCompile Include="Test_OtpUri.cpp" />
+    <ClCompile Include="Test_PasswordHistory.cpp" />
+    <ClCompile Include="Test_PasswordStrength.cpp" />
+    <ClCompile Include="Test_RealFileSystem.cpp" />
+    <ClCompile Include="Test_VaultAudit.cpp" />
+    <ClCompile Include="Test_VaultFile.cpp" />
+    <ClCompile Include="Test_Secret.cpp" />
+    <ClCompile Include="Test_SecretChars.cpp" />
+    <ClCompile Include="Test_SecureString.cpp" />
+    <ClCompile Include="Test_TotpSecret.cpp" />
+    <ClCompile Include="Test_FieldValue.cpp" />
+    <ClCompile Include="Test_ListItems.cpp" />
+    <ClCompile Include="Test_Palette.cpp" />
+    <ClCompile Include="Test_Age.cpp" />
+    <ClCompile Include="Test_MotionCurve.cpp" />
+    <ClCompile Include="HeapWatch.cpp" />
+
+    <ClCompile Include="..\Manifold-Vault\Source\Core\AccentColour.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Backup.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\BackupRun.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Codec.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\CsvExport.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\CsvImport.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Base32.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Crypto.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\FieldRole.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\FieldTemplate.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\ListKind.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Palette.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Age.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\App\ProcessHardening.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Folder.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\FileSystem.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\GermanText.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Hmac.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Sha1.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Generator.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Language.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\LinkSafety.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\LockPolicy.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Model.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Otp.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\OtpUri.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Mutate.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\PasswordHistory.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\PasswordStrength.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\PathSafety.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Random.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Redact.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\SaveGuard.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Search.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\SettingsPolicy.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\VaultAudit.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\VaultFile.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Result.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\Secret.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\SecretChars.cpp" />
+    <ClCompile Include="..\Manifold-Vault\Source\Core\SecureString.cpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="TestRunner.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\AccentColour.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Backup.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\BackupRun.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Codec.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\CsvExport.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Base32.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Crypto.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\FieldRole.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\FieldTemplate.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\ListKind.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Palette.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Folder.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\FileSystem.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\GermanText.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Hmac.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Sha1.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Generator.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Language.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\LinkSafety.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\LockPolicy.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Model.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Otp.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\OtpUri.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Mutate.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\PasswordHistory.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\PasswordStrength.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\PathSafety.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Random.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Redact.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\SaveGuard.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Search.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\VaultAudit.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\VaultFile.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\VaultFormat.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Endian.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Result.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\Secret.h" />
+    <ClInclude Include="..\Manifold-Vault\Source\Core\SecretChars.h" />
+  </ItemGroup>
+
+  <Target Name="BunkerTestsRejectNonX64" BeforeTargets="PrepareForBuild" Condition="'$(Platform)' != 'x64'">
+    <Error Text="Bunker.Tests builds for x64 only." />
+  </Target>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

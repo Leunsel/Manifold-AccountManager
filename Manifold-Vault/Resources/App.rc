@@ -1,0 +1,47 @@
+﻿#include <windows.h>
+#include "..\Source\Resource.h"
+
+#pragma code_page(65001)
+
+IDR_FONT_INTER_REGULAR   RCDATA "..\\..\\Vendor\\fonts\\inter\\Inter-Regular.ttf"
+IDR_FONT_INTER_MEDIUM    RCDATA "..\\..\\Vendor\\fonts\\inter\\Inter-Medium.ttf"
+IDR_FONT_INTER_SEMIBOLD  RCDATA "..\\..\\Vendor\\fonts\\inter\\Inter-SemiBold.ttf"
+IDR_FONT_MONO_REGULAR    RCDATA "..\\..\\Vendor\\fonts\\jetbrainsmono\\JetBrainsMono-Regular.ttf"
+IDR_FONT_MONO_MEDIUM     RCDATA "..\\..\\Vendor\\fonts\\jetbrainsmono\\JetBrainsMono-Medium.ttf"
+IDR_FONT_FA_SOLID        RCDATA "..\\..\\Vendor\\fontawesome\\otfs\\fa-solid-900.otf"
+IDR_FONT_FA_BRANDS       RCDATA "..\\..\\Vendor\\fontawesome\\otfs\\fa-brands-400.otf"
+
+IDI_APPICON ICON "icon.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION    0,1,0,0
+ PRODUCTVERSION 0,1,0,0
+ FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+ FILEFLAGS      VS_FF_DEBUG
+#else
+ FILEFLAGS      0x0L
+#endif
+ FILEOS         VOS_NT_WINDOWS32
+ FILETYPE       VFT_APP
+ FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004b0"
+        BEGIN
+            VALUE "CompanyName",      "Manifold Vault"
+            VALUE "Comments",         "Encrypted credential vault. Local, no network access."
+            VALUE "FileDescription",  "Manifold Vault"
+            VALUE "FileVersion",      "0.1.0.0"
+            VALUE "InternalName",     "Vault"
+            VALUE "OriginalFilename", "Vault.exe"
+            VALUE "ProductName",      "Manifold Vault"
+            VALUE "ProductVersion",   "0.1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0, 1200
+    END
+END
