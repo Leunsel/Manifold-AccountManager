@@ -109,17 +109,18 @@ Manifold-Vault/Source/Lang    UI strings (English, German)
 Tests/                        unit tests (Bunker.Tests)
 Tools/                        checks and generators
 Vendor/                       third-party code and fonts
+Licenses/                     license texts of the third-party components
 ```
 
 ## Third-party components
 
 | Component | License |
 |---|---|
-| [Dear ImGui](https://github.com/ocornut/imgui) | MIT |
-| [libsodium](https://libsodium.org) | ISC |
-| [Font Awesome Free](https://fontawesome.com) | icons CC BY 4.0, fonts SIL OFL 1.1 |
-| [Inter](https://rsms.me/inter/) | SIL OFL 1.1 |
-| [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | SIL OFL 1.1 |
+| [Dear ImGui](https://github.com/ocornut/imgui) | [MIT](Licenses/Dear-ImGui.txt) |
+| [libsodium](https://libsodium.org) 1.0.22 | [ISC](Licenses/libsodium.txt) |
+| [Font Awesome Free](https://fontawesome.com) 7.3.1 | [icons CC BY 4.0, fonts SIL OFL 1.1](Licenses/Font-Awesome-Free.txt) |
+| [Inter](https://rsms.me/inter/) | [SIL OFL 1.1](Licenses/Inter.txt) |
+| [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | [SIL OFL 1.1](Licenses/JetBrains-Mono.txt) |
 
 Brand icons are trademarks of their respective owners and are used only to
 label your own accounts.
