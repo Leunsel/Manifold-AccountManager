@@ -1513,7 +1513,7 @@ namespace Bunker::UI
             g_sidebarCompact = doc.VaultSettings.SidebarCollapsed;
             ImGui::PushStyleColor(ImGuiCol_ChildBg, Theme::Color(Token::Panel));
             if (g_sidebarCompact)
-                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, Px(8, 10));
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, PxWhole(8, 10));
             ImGui::BeginChild("##sidebar", ImVec2(width, height),
                               ImGuiChildFlags_AlwaysUseWindowPadding);
             if (g_sidebarCompact)
@@ -2116,7 +2116,7 @@ namespace Bunker::UI
 
             if (entries.empty())
             {
-                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, Px(22, 10));
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, PxWhole(22, 10));
                 ImGui::BeginChild("##empty", ImVec2(0, 0), ImGuiChildFlags_AlwaysUseWindowPadding);
                 DrawEmptyState(session);
                 ImGui::EndChild();
@@ -5446,7 +5446,7 @@ namespace Bunker::UI
         if (g_folderScope == FolderScope::Finding)
             Audit::EntriesWith(session, g_findingKind, g_findingIds);
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, Px(14, 10));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, PxWhole(14, 10));
         DrawSidebar(app, session, sidebarWidth, fullHeight, topBarHeight);
         ImGui::PopStyleVar();
         ImGui::SameLine(0, 0);
@@ -5456,7 +5456,7 @@ namespace Bunker::UI
         DrawSaveBanner(app, session);
         const float bodyHeight = ImGui::GetContentRegionAvail().y;
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, Px(14, 10));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, PxWhole(14, 10));
         if (!Settings::IsOpen() && !Audit::IsOpen())
         {
             DrawEntryList(app, session, listWidth, bodyHeight);

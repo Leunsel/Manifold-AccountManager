@@ -16,6 +16,46 @@ TEST_CASE(Link_OpensOnlyTheTwoSchemesItPromises)
     CHECK(LinkToOpen("  https://example.de  ") == "https://example.de");
 }
 
+TEST_CASE(Link_FlagsOnlyUnencryptedPublicAddresses)
+{
+    const char* flagged[] = {
+        "http://example.de",
+        "HTTP://Example.de/login?next=/",
+        "  http://shop.example.com  ",
+        "http://nutzer:geheim@shop.example.com/",
+        "http://example.de:8080/admin",
+        "http://8.8.8.8/",
+        "http://172.32.0.1",
+        "http://www.example.local.de/",
+    };
+    for (const char* link : flagged)
+        CHECK_MSG(IsUnencryptedWebLink(link), std::string("not flagged: ") + link);
+
+    const char* fine[] = {
+        "https://example.de",
+        "example.de",
+        "ftp://example.de",
+        "http://",
+        "http://localhost:3000",
+        "http://127.0.0.1/",
+        "http://10.0.0.5:5000/x",
+        "http://172.16.0.1",
+        "http://192.168.178.1",
+        "http://169.254.1.1",
+        "http://fritz.box",
+        "http://FRITZ.BOX/",
+        "http://speedport.ip",
+        "http://nas",
+        "http://drucker.local/",
+        "http://router.home.arpa",
+        "http://example.lan.",
+        "http://[::1]:8080/",
+        "http://[fd00::1]/",
+    };
+    for (const char* link : fine)
+        CHECK_MSG(!IsUnencryptedWebLink(link), std::string("flagged: ") + link);
+}
+
 TEST_CASE(Link_RefusesEverythingElse)
 {
     const char* refused[] = {

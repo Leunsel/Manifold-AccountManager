@@ -114,6 +114,8 @@ namespace Bunker::Vault
         std::vector<UnknownRecord> Unknown;
     };
 
+    inline constexpr std::uint32_t kDefaultTextSize = 100;
+
     struct Settings
     {
         std::uint32_t AutoLockSeconds = 300;
@@ -139,6 +141,8 @@ namespace Bunker::Vault
         bool MonochromeIcons = false;
 
         std::uint32_t ListOrder = 0;
+
+        std::uint32_t TextSize = kDefaultTextSize;
 
         std::vector<UnknownRecord> Unknown;
     };

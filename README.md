@@ -13,8 +13,8 @@ file next to the program: no account, no cloud, no network access.
   product keys, security questions and the like.
 - Password generator for random passwords and passphrases, with a strength
   estimate.
-- Security overview: reused, weak, common and old passwords, and accounts
-  without a second factor.
+- Security overview: reused, weak, common and old passwords, accounts without
+  a second factor, and web addresses without https.
 - Password history, stored as keyed fingerprints rather than old passwords.
 - CSV import (Bitwarden-style and common column names) and an explicit,
   warned-about plain-text CSV export.
@@ -22,8 +22,9 @@ file next to the program: no account, no cloud, no network access.
 - Auto-lock when idle, minimised, on focus loss, when Windows locks or sleeps;
   copied secrets are removed from the clipboard after a delay.
 - Thirteen colour schemes: red, green and blue, each as dark, OLED (true black)
-  and light, plus Bearded Arc, Mint, Midnight and a monospace Terminal scheme.
-  The unlock screen uses the vault's scheme.
+  and light or following the Windows setting, plus Bearded Arc, Mint, Midnight
+  and a monospace Terminal scheme. Four text sizes. The unlock screen uses the
+  vault's scheme and size.
 - Brand icons for known services, or one of 148 symbols for everything else.
 - English and German user interface.
 
@@ -43,9 +44,9 @@ file next to the program: no account, no cloud, no network access.
   associated data, so parameters cannot be downgraded and slots cannot be
   swapped. The plaintext is padded to 4 KiB, every save uses fresh nonces, and
   files are replaced atomically.
-- **One unencrypted setting.** The colour scheme is stored as one byte in the
-  (authenticated) header so the unlock screen can show it. Nothing else about
-  the vault is readable without the password.
+- **Two unencrypted settings.** The colour scheme and the text size are stored
+  as one byte each in the (authenticated) header so the unlock screen can show
+  them. Nothing else about the vault is readable without the password.
 - **Memory.** Secrets live in locked, guarded memory and are wiped when freed.
   The master password never passes through ImGui's text buffers, and ImGui's
   own allocations are wiped on free.
@@ -60,7 +61,7 @@ file next to the program: no account, no cloud, no network access.
 
 | Region | Size | Content |
 |---|---|---|
-| A | 96 bytes | magic `BUNKER\x1A\0`, version 1.0, KDF parameters, salt, nonce, generation, colour scheme |
+| A | 96 bytes | magic `BUNKER\x1A\0`, version 1.0, KDF parameters, salt, nonce, generation, colour scheme, text size |
 | B | 80 bytes per slot | key slot: the vault key, wrapped by the password key |
 | C | 16 bytes | BLAKE2b-128 of A and B, to reject accidental damage early |
 | D | rest | XChaCha20-Poly1305 ciphertext of a TLV document |

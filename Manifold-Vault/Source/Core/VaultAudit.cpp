@@ -2,6 +2,7 @@
 
 #include "Core/Crypto.h"
 #include "Core/FieldRole.h"
+#include "Core/LinkSafety.h"
 #include "Core/PasswordHistory.h"
 #include "Core/PasswordStrength.h"
 #include "Core/Random.h"
@@ -128,6 +129,12 @@ namespace Bunker::Vault
                 !e.HasTotp && !SecondFactorIsHandled(e.SecondFactorState);
             if (finding.NoSecondFactor)
                 ++report.WithoutSecondFactor;
+
+            for (const Field& f : e.Fields)
+                if (f.Role == FieldRole::Website && IsUnencryptedWebLink(f.Value.View()))
+                    finding.InsecureLink = true;
+            if (finding.InsecureLink)
+                ++report.InsecureLinks;
 
             if (const Field* pw = PasswordOf(e))
             {

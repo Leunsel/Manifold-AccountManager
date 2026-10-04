@@ -2,6 +2,7 @@
 
 #include "Core/Endian.h"
 #include "Core/Palette.h"
+#include "Core/SettingsPolicy.h"
 #include "Core/VaultFormat.h"
 
 #include <sodium.h>
@@ -23,7 +24,8 @@ namespace Bunker::Vault
                                 const unsigned char salt[Crypto::kSaltBytes],
                                 const unsigned char nonce[Crypto::kNonceBytes],
                                 std::uint64_t generation,
-                                std::uint8_t gateTheme)
+                                std::uint8_t gateTheme,
+                                std::uint8_t gateTextSize)
         {
             std::memset(h, 0, kFixedHeaderBytes);
             std::memcpy(h + HeaderOffset::Magic, kMagic, sizeof(kMagic));
@@ -37,6 +39,7 @@ namespace Bunker::Vault
             StoreU64Le(h + HeaderOffset::KdfMemLimit, params.MemLimit);
             h[HeaderOffset::KdfAlgorithm] = kKdfArgon2id13;
             h[HeaderOffset::GateTheme] = gateTheme;
+            h[HeaderOffset::GateTextSize] = gateTextSize;
             std::memcpy(h + HeaderOffset::KdfSalt, salt, Crypto::kSaltBytes);
             std::memcpy(h + HeaderOffset::BodyNonce, nonce, Crypto::kNonceBytes);
             StoreU64Le(h + HeaderOffset::Generation, generation);
@@ -83,6 +86,7 @@ namespace Bunker::Vault
         sodium_memzero(m_salt, sizeof(m_salt));
         m_generation = 0;
         m_headerTheme = 0;
+        m_headerTextSize = 0;
         m_unlocked = false;
     }
 
@@ -258,6 +262,7 @@ namespace Bunker::Vault
 
         out.m_generation = LoadU64Le(file.data() + HeaderOffset::Generation);
         out.m_headerTheme = file[HeaderOffset::GateTheme];
+        out.m_headerTextSize = file[HeaderOffset::GateTextSize];
         out.m_versionMinor = minor;
         out.m_unlocked = true;
         return Ok();
@@ -286,7 +291,8 @@ namespace Bunker::Vault
         out.assign(headerLen + paddedLen + Crypto::kTagBytes, 0);
 
         BuildHeaderRegionA(out.data(), m_versionMinor, slotCount, m_params,
-                           m_salt, bodyNonce, m_generation + 1, GateThemeToWrite());
+                           m_salt, bodyNonce, m_generation + 1, GateThemeToWrite(),
+                           GateTextSizeToWrite());
 
         if (const Status st = WrapVaultKey(out.data() + kFixedHeaderBytes,
                                            m_kek, m_vaultKey, out.data()); !st.IsOk())
@@ -333,6 +339,7 @@ namespace Bunker::Vault
         out.SlotCount = LoadU16Le(file.data() + HeaderOffset::SlotCount);
         out.Generation = LoadU64Le(file.data() + HeaderOffset::Generation);
         out.GateTheme = file[HeaderOffset::GateTheme];
+        out.GateTextSize = file[HeaderOffset::GateTextSize];
 
         if (out.VersionMajor > kVersionMajor)
             return Fail(ErrorCode::UnsupportedFormatVersion, "newer major version");
@@ -363,6 +370,7 @@ namespace Bunker::Vault
 
         ++m_generation;
         m_headerTheme = file[HeaderOffset::GateTheme];
+        m_headerTextSize = file[HeaderOffset::GateTextSize];
         return Ok();
     }
 
@@ -375,9 +383,16 @@ namespace Bunker::Vault
         return code;
     }
 
-    bool VaultFile::HeaderThemeStale() const
+    std::uint8_t VaultFile::GateTextSizeToWrite() const
     {
-        return m_unlocked && GateThemeToWrite() != m_headerTheme;
+        const std::uint32_t size = TextSizePercent(m_doc.VaultSettings);
+        return size == kDefaultTextSize ? 0 : static_cast<std::uint8_t>(size);
+    }
+
+    bool VaultFile::HeaderHintsStale() const
+    {
+        return m_unlocked && (GateThemeToWrite() != m_headerTheme ||
+                              GateTextSizeToWrite() != m_headerTextSize);
     }
 
     Status VaultFile::ChangePassword(IFileSystem& fs, const std::string& path,

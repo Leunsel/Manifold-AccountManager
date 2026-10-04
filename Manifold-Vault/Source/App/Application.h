@@ -46,6 +46,7 @@ namespace Bunker
         void ApplyVaultSettings();
 
         void ApplyTheme(std::string_view paletteId);
+        void ApplyTextSize(std::uint32_t percent);
         SecretClipboard& Clipboard() { return m_clipboard; }
         LockPolicy& Lock() { return m_lockPolicy; }
 
@@ -79,7 +80,11 @@ namespace Bunker
 
         void ApplyWindowChrome();
         void ApplyPendingTheme();
+        void ApplyPendingTextSize();
         void RescaleForDpi(UINT dpi);
+        float WindowScale() const;
+        SIZE MinimumWindowSize() const;
+        void GrowToMinimumSize();
         void RenderFrame();
         void ApplyPendingResize();
         void FitInitialWindow();
@@ -129,6 +134,10 @@ namespace Bunker
 
         std::string m_pendingTheme;
         bool m_themePending = false;
+
+        float m_textScale = 1.0f;
+        float m_pendingTextScale = 1.0f;
+        bool m_textScalePending = false;
 
         wchar_t m_error[256] = L"";
     };

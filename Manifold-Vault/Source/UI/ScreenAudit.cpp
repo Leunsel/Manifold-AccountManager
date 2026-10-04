@@ -170,6 +170,7 @@ namespace Bunker::UI::Audit
         if (finding.WeakPassword)   append(T(Str::Audit_TagWeak));
         if (finding.CommonPassword) append(T(Str::Audit_TagCommon));
         if (finding.NoSecondFactor) append(T(Str::Audit_TagNoTotp));
+        if (finding.InsecureLink)   append(T(Str::Audit_TagInsecure));
         if (finding.OldPassword)    append(T(Str::Audit_TagOld));
         return tags;
     }
@@ -189,7 +190,8 @@ namespace Bunker::UI::Audit
             const bool has = (kind == FindingKind::Reused && f.ReusedPassword) ||
                              (kind == FindingKind::Weak && f.WeakPassword) ||
                              (kind == FindingKind::Common && f.CommonPassword) ||
-                             (kind == FindingKind::NoTotp && f.NoSecondFactor);
+                             (kind == FindingKind::NoTotp && f.NoSecondFactor) ||
+                             (kind == FindingKind::Insecure && f.InsecureLink);
             if (has)
                 out.push_back(f.EntryId);
         }
@@ -203,6 +205,7 @@ namespace Bunker::UI::Audit
         case FindingKind::Weak:   return T(Str::Audit_TileWeak);
         case FindingKind::Common: return T(Str::Audit_TileCommon);
         case FindingKind::NoTotp: return T(Str::Audit_TileNoTotp);
+        case FindingKind::Insecure: return T(Str::Audit_TileInsecure);
         case FindingKind::None:   break;
         }
         return "";
@@ -286,7 +289,7 @@ namespace Bunker::UI::Audit
 
         const float gap = Px(12.0f);
         const float tileWidth =
-            std::floor((ImGui::GetContentRegionAvail().x - gap * 3.0f) / 4.0f);
+            std::floor((ImGui::GetContentRegionAvail().x - gap * 4.0f) / 5.0f);
         if (Tile("##tile-reused", T(Str::Audit_TileReused), report.ReusedEntries, tileWidth))
             g_filterRequest = FindingKind::Reused;
         ImGui::SameLine(0, gap);
@@ -298,6 +301,9 @@ namespace Bunker::UI::Audit
         ImGui::SameLine(0, gap);
         if (Tile("##tile-notfa", T(Str::Audit_TileNoTotp), report.WithoutSecondFactor, tileWidth))
             g_filterRequest = FindingKind::NoTotp;
+        ImGui::SameLine(0, gap);
+        if (Tile("##tile-insecure", T(Str::Audit_TileInsecure), report.InsecureLinks, tileWidth))
+            g_filterRequest = FindingKind::Insecure;
         ImGui::Dummy(Px(0, 4));
 
         CardColumns columns;
@@ -348,6 +354,19 @@ namespace Bunker::UI::Audit
                 Sentence(ICON_FA_TRIANGLE_EXCLAMATION, line, Token::WarnBright);
             }
             Hint(T(Str::Audit_CommonNote));
+            ImGui::Dummy(Px(0, 8));
+        }
+        if (report.InsecureLinks != 0)
+        {
+            if (report.InsecureLinks == 1)
+                Sentence(ICON_FA_TRIANGLE_EXCLAMATION, T(Str::Audit_InsecureOne),
+                         Token::WarnBright);
+            else
+            {
+                std::snprintf(line, sizeof(line), T(Str::Audit_Insecure), report.InsecureLinks);
+                Sentence(ICON_FA_TRIANGLE_EXCLAMATION, line, Token::WarnBright);
+            }
+            Hint(T(Str::Audit_InsecureNote));
             ImGui::Dummy(Px(0, 8));
         }
         if (report.WithoutSecondFactor != 0)

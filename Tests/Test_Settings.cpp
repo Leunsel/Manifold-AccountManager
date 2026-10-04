@@ -34,6 +34,7 @@ namespace
         s.Theme = "fjord";
         s.MonochromeIcons = true;
         s.ListOrder = 1;
+        s.TextSize = 130;
         return s;
     }
 
@@ -74,6 +75,7 @@ TEST_CASE(Settings_EveryFieldSurvivesARoundTrip)
     CHECK_MSG(r.Theme == "fjord", "Theme did not come back");
     CHECK_MSG(r.MonochromeIcons, "MonochromeIcons did not come back");
     CHECK_EQ(r.ListOrder, std::uint32_t{ 1 });
+    CHECK_EQ(r.TextSize, std::uint32_t{ 130 });
     CHECK_MSG(r.Unknown.empty(), "a known record ended up among the unknown ones");
 
     Body again([&](Writer& out) {
@@ -147,6 +149,46 @@ TEST_CASE(Settings_TheDefaultThemeWritesNoRecord)
     CHECK(b.size() > a.size());
     const std::string bytes(reinterpret_cast<const char*>(a.data()), a.size());
     CHECK(bytes.find("light") == std::string::npos);
+}
+
+TEST_CASE(Settings_TheDefaultTextSizeWritesNoRecord)
+{
+    Document plain;
+    Document chosen;
+    chosen.VaultSettings.TextSize = 115;
+    Body a([&](Writer& out) {
+        Encode(plain, out);
+    });
+    Body b([&](Writer& out) {
+        Encode(chosen, out);
+    });
+    CHECK(b.size() > a.size());
+
+    Document back;
+    CHECK(Decode(a.data(), a.size(), back));
+    CHECK_EQ(back.VaultSettings.TextSize, kDefaultTextSize);
+}
+
+TEST_CASE(SettingsPolicy_AnUnofferedTextSizeTakesTheNearestOne)
+{
+    Settings s;
+    for (const std::uint32_t offered : kTextSizes)
+    {
+        s.TextSize = offered;
+        CHECK_EQ(TextSizePercent(s), offered);
+    }
+    s.TextSize = 0;
+    CHECK_EQ(TextSizePercent(s), std::uint32_t{ 90 });
+    s.TextSize = 104;
+    CHECK_EQ(TextSizePercent(s), std::uint32_t{ 100 });
+    s.TextSize = 123;
+    CHECK_EQ(TextSizePercent(s), std::uint32_t{ 130 });
+    s.TextSize = 0xFFFFFFFFu;
+    CHECK_EQ(TextSizePercent(s), std::uint32_t{ 130 });
+    CHECK_EQ(s.TextSize, 0xFFFFFFFFu);
+
+    ClampSettings(s);
+    CHECK_EQ(s.TextSize, std::uint32_t{ 130 });
 }
 
 TEST_CASE(Settings_AnExpandedSidebarWritesNoRecord)

@@ -39,6 +39,7 @@ namespace Bunker::Vault
             std::uint16_t SlotCount = 0;
             std::uint64_t Generation = 0;
             std::uint8_t GateTheme = 0;
+            std::uint8_t GateTextSize = 0;
         };
 
         static Status PeekHeader(IFileSystem& fs, const std::string& path,
@@ -59,7 +60,7 @@ namespace Bunker::Vault
 
         const unsigned char* Salt() const { return m_salt; }
 
-        bool HeaderThemeStale() const;
+        bool HeaderHintsStale() const;
 
         bool IsUnlocked() const { return m_unlocked; }
         Document& Doc() { return m_doc; }
@@ -72,6 +73,7 @@ namespace Bunker::Vault
     private:
         Status Serialise(std::vector<unsigned char>& out);
         std::uint8_t GateThemeToWrite() const;
+        std::uint8_t GateTextSizeToWrite() const;
 
         Document m_doc;
         SecureBuffer m_kek;
@@ -81,6 +83,7 @@ namespace Bunker::Vault
         std::uint64_t m_generation = 0;
         std::uint16_t m_versionMinor = kVersionMinor;
         std::uint8_t m_headerTheme = 0;
+        std::uint8_t m_headerTextSize = 0;
         bool m_unlocked = false;
     };
 }

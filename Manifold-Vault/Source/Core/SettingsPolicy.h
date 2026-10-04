@@ -22,7 +22,13 @@ namespace Bunker::Vault
     inline constexpr std::uint32_t kMinBackupIntervalSeconds = 300;
     inline constexpr std::uint32_t kMaxBackupIntervalSeconds = 86400;
 
+    inline constexpr std::uint32_t kTextSizes[] = { 90, kDefaultTextSize, 115, 130 };
+
     void ClampSettings(Settings& settings);
+
+    std::uint32_t NearestTextSize(std::uint32_t percent);
+
+    std::uint32_t TextSizePercent(const Settings& settings);
 
     const char* LanguageCode(const Settings& settings);
 

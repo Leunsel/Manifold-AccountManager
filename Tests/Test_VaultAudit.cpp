@@ -68,6 +68,46 @@ TEST_CASE(Audit_ACleanVaultReportsNothing)
     CHECK_EQ(r.WithoutSecondFactor, std::size_t{ 0 });
 }
 
+TEST_CASE(Audit_FindsAWebsiteWithoutHttps)
+{
+    Document doc;
+    auto withSite = [&](const char* title, const char* site) {
+        Entry e;
+        e.Title = title;
+        e.HasTotp = true;
+        e.Totp.Config.SecretBase32 = "JBSWY3DPEHPK3PXP";
+        Field f;
+        f.Key = "Website";
+        f.Value = site;
+        f.Role = FieldRole::Website;
+        e.Fields.push_back(f);
+        const auto id = AddEntry(doc, e, 1000);
+        CHECK(id.IsOk());
+        return id.IsOk() ? id.Value() : 0;
+    };
+    const std::uint64_t shop = withSite("Shop", "http://shop.example.de/login");
+    const std::uint64_t bank = withSite("Bank", "https://bank.example.de");
+    const std::uint64_t router = withSite("Router", "http://192.168.178.1");
+
+    Entry notes;
+    notes.Title = "Notiz";
+    notes.HasTotp = true;
+    notes.Totp.Config.SecretBase32 = "JBSWY3DPEHPK3PXP";
+    Field custom;
+    custom.Key = "Link";
+    custom.Value = "http://example.de";
+    notes.Fields.push_back(custom);
+    CHECK(AddEntry(doc, notes, 1000).IsOk());
+
+    const AuditReport r = Audit(doc, 0);
+    CHECK_EQ(r.InsecureLinks, std::size_t{ 1 });
+    const AuditFinding* f = Find(r, shop);
+    CHECK_MSG(f && f->InsecureLink, "the http:// login was not reported");
+    CHECK_MSG(!Find(r, bank), "an https:// address was reported");
+    CHECK_MSG(!Find(r, router), "the router at home was reported");
+    CHECK_EQ(r.Findings.size(), std::size_t{ 1 });
+}
+
 TEST_CASE(Audit_FindsAReusedPassword)
 {
     Document doc;

@@ -38,6 +38,7 @@ namespace Bunker
             Weak,
             Common,
             NoTotp,
+            Insecure,
         };
         FindingKind TakeFilterRequest();
 

@@ -463,12 +463,24 @@ namespace Bunker::UI
         {
             const Fonts::Set& f = Fonts::Current();
             const bool on = SecretField::CapsLockOn();
+            const ImVec2 at = ImGui::GetCursorScreenPos();
+            const float w = ImGui::GetContentRegionAvail().x;
             ImGui::PushFont(f.Mono, Fonts::Sizes::Label);
             ImGui::PushStyleColor(ImGuiCol_Text,
                                   Theme::Color(on ? Token::WarnBright : Token::TextMuted));
             ImGui::TextUnformatted(T(on ? Str::Unlock_CapsOn : Str::Unlock_CapsOff));
             ImGui::PopStyleColor();
             ImGui::PopFont();
+
+            const std::string layout = SecretField::KeyboardLayout();
+            if (layout.empty())
+                return;
+            char text[48];
+            std::snprintf(text, sizeof(text), T(Str::Unlock_Keyboard), layout.c_str());
+            const float size = Px(Fonts::Sizes::Label);
+            const ImVec2 t = f.Mono->CalcTextSizeA(size, FLT_MAX, 0.0f, text);
+            ImGui::GetWindowDrawList()->AddText(f.Mono, size, ImVec2(at.x + w - t.x, at.y),
+                                                Theme::U32(Token::TextMuted), text);
         }
 
         void FieldLabel(const char* text, const char* tag)
@@ -910,7 +922,7 @@ namespace Bunker::UI
         if (!opening)
         {
             ImGui::SetCursorScreenPos(cardAt);
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, Px(30, 24));
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, PxWhole(30, 24));
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, Theme::Round(Px(18.0f)));
             ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 1.0f);
             ImGui::PushStyleColor(ImGuiCol_ChildBg, Theme::Color(Token::Elevated, 0.82f));

@@ -5,6 +5,7 @@
 #include "imgui.h"
 
 #include <cstddef>
+#include <string>
 
 namespace Bunker::UI
 {
@@ -39,6 +40,7 @@ namespace Bunker::UI
         void SetFocus(bool on) { m_focused = on; }
 
         static bool CapsLockOn();
+        static std::string KeyboardLayout();
 
     private:
         void Append(unsigned int codepoint);

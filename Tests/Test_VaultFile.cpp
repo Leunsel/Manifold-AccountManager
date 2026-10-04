@@ -926,9 +926,9 @@ TEST_CASE(Vault_HeaderNamesTheThemeForTheGate)
     CHECK_MSG(info.GateTheme == 0, "a new vault already names a scheme");
 
     v.Doc().VaultSettings.Theme = "mint";
-    CHECK(v.HeaderThemeStale());
+    CHECK(v.HeaderHintsStale());
     CHECK(v.Save(fs, kPath).IsOk());
-    CHECK(!v.HeaderThemeStale());
+    CHECK(!v.HeaderHintsStale());
     CHECK(VaultFile::PeekHeader(fs, kPath, info).IsOk());
     CHECK(info.GateTheme == PaletteHeaderCode("mint"));
     CHECK(PaletteIdForHeaderCode(info.GateTheme) == "mint");
@@ -936,13 +936,47 @@ TEST_CASE(Vault_HeaderNamesTheThemeForTheGate)
     VaultFile v2;
     CHECK(VaultFile::Unlock(fs, kPath, kPassword, std::strlen(kPassword), v2).IsOk());
     CHECK(v2.Doc().VaultSettings.Theme == "mint");
-    CHECK(!v2.HeaderThemeStale());
+    CHECK(!v2.HeaderHintsStale());
 
     v2.Doc().VaultSettings.Theme.clear();
-    CHECK(v2.HeaderThemeStale());
+    CHECK(v2.HeaderHintsStale());
     CHECK(v2.Save(fs, kPath).IsOk());
     CHECK(VaultFile::PeekHeader(fs, kPath, info).IsOk());
     CHECK(info.GateTheme == 0);
+}
+
+TEST_CASE(Vault_HeaderNamesTheTextSizeForTheGate)
+{
+    Ready();
+    MemoryFileSystem fs;
+    VaultFile v;
+    CHECK(VaultFile::Create(fs, kPath, kPassword, std::strlen(kPassword), Cheap(), v).IsOk());
+
+    VaultFile::HeaderInfo info;
+    CHECK(VaultFile::PeekHeader(fs, kPath, info).IsOk());
+    CHECK_MSG(info.GateTextSize == 0, "a new vault already names a text size");
+
+    v.Doc().VaultSettings.TextSize = 130;
+    CHECK(v.HeaderHintsStale());
+    CHECK(v.Save(fs, kPath).IsOk());
+    CHECK(!v.HeaderHintsStale());
+    CHECK(VaultFile::PeekHeader(fs, kPath, info).IsOk());
+    CHECK(info.GateTextSize == 130);
+    CHECK_MSG(info.GateTheme == 0, "the text size moved into the theme byte");
+
+    v.Doc().VaultSettings.TextSize = 117;
+    CHECK(v.Save(fs, kPath).IsOk());
+    CHECK(VaultFile::PeekHeader(fs, kPath, info).IsOk());
+    CHECK_MSG(info.GateTextSize == 115, "an unoffered size reached the header");
+
+    VaultFile v2;
+    CHECK(VaultFile::Unlock(fs, kPath, kPassword, std::strlen(kPassword), v2).IsOk());
+    CHECK(!v2.HeaderHintsStale());
+    v2.Doc().VaultSettings.TextSize = kDefaultTextSize;
+    CHECK(v2.HeaderHintsStale());
+    CHECK(v2.Save(fs, kPath).IsOk());
+    CHECK(VaultFile::PeekHeader(fs, kPath, info).IsOk());
+    CHECK_MSG(info.GateTextSize == 0, "the default size changed the header of existing vaults");
 }
 
 TEST_CASE(Vault_TheThemeByteIsAuthenticated)
@@ -987,7 +1021,7 @@ TEST_CASE(Vault_AThemeThisBuildDoesNotKnowKeepsItsNumber)
     CHECK(v.Save(fs, kPath).IsOk());
 
     v.Doc().VaultSettings.Theme = "sepia-2031";
-    CHECK_MSG(!v.HeaderThemeStale(), "an unknown scheme counted as stale");
+    CHECK_MSG(!v.HeaderHintsStale(), "an unknown scheme counted as stale");
     CHECK(v.Save(fs, kPath).IsOk());
     VaultFile::HeaderInfo info;
     CHECK(VaultFile::PeekHeader(fs, kPath, info).IsOk());

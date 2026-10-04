@@ -433,6 +433,9 @@ namespace Bunker::Vault
                 case SettingsTag::ListOrder:
                     if (!Reader::AsU32(p, n, out.ListOrder)) return false;
                     break;
+                case SettingsTag::TextSize:
+                    if (!Reader::AsU32(p, n, out.TextSize)) return false;
+                    break;
                 default:
                     out.Unknown.push_back(UnknownRecord{ tag, { p, p + n } });
                     break;
@@ -468,6 +471,8 @@ namespace Bunker::Vault
             w.WriteU32(S(SettingsTag::MonochromeIcons), 1u);
         if (s.ListOrder != 0)
             w.WriteU32(S(SettingsTag::ListOrder), s.ListOrder);
+        if (s.TextSize != kDefaultTextSize)
+            w.WriteU32(S(SettingsTag::TextSize), s.TextSize);
         for (const UnknownRecord& u : doc.VaultSettings.Unknown)
             w.WriteUnknown(u);
         w.EndRecord();

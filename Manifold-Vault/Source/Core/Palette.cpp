@@ -169,8 +169,36 @@ namespace Bunker
             { "fjord", 5 },      { "mint", 6 },        { "aubergine", 7 },   { "midnight", 8 },
             { "moss", 9 },       { "terminal", 10 },   { "red", 11 },        { "red-oled", 12 },
             { "red-light", 13 }, { "green", 14 },      { "green-oled", 15 }, { "green-light", 16 },
-            { "blue-oled", 17 },
+            { "blue-oled", 17 }, { "red-auto", 18 },     { "green-auto", 19 }, { "blue-auto", 20 },
         };
+
+        struct ThemeFamily
+        {
+            const char* Ids[kThemeModeCount];
+        };
+
+        // Order of the colour choice in the settings; null: mode not offered.
+        constexpr ThemeFamily kFamilies[] = {
+            { { "arc", nullptr, nullptr, nullptr } },
+            { { "red", "red-oled", "red-light", "red-auto" } },
+            { { "green", "green-oled", "green-light", "green-auto" } },
+            { { "dark", "blue-oled", "light", "blue-auto" } },
+            { { "mint", nullptr, nullptr, nullptr } },
+            { { "midnight", nullptr, nullptr, nullptr } },
+            { { "terminal", nullptr, nullptr, nullptr } },
+        };
+
+        bool FindChoice(std::string_view id, ThemeChoice& out)
+        {
+            for (std::size_t f = 0; f < sizeof(kFamilies) / sizeof(kFamilies[0]); ++f)
+                for (std::size_t m = 0; m < kThemeModeCount; ++m)
+                    if (kFamilies[f].Ids[m] && SameId(id, kFamilies[f].Ids[m]))
+                    {
+                        out = { f, static_cast<ThemeMode>(m) };
+                        return true;
+                    }
+            return false;
+        }
 
         // Retired schemes: ids stored in vaults resolve to the closest current one.
         struct Retired
@@ -221,6 +249,42 @@ namespace Bunker
             if (h.Code == code)
                 return h.Id;
         return {};
+    }
+
+    std::size_t ThemeFamilyCount()
+    {
+        return sizeof(kFamilies) / sizeof(kFamilies[0]);
+    }
+
+    bool ThemeModeAvailable(std::size_t family, ThemeMode mode)
+    {
+        return family < ThemeFamilyCount() &&
+               kFamilies[family].Ids[static_cast<std::size_t>(mode)] != nullptr;
+    }
+
+    ThemeChoice ThemeChoiceOf(std::string_view id)
+    {
+        ThemeChoice choice;
+        if (!FindChoice(id, choice))
+            FindChoice(PaletteAt(PaletteIndex(id)).Id, choice);
+        return choice;
+    }
+
+    std::string_view ThemeIdOf(ThemeChoice choice)
+    {
+        if (choice.Family >= ThemeFamilyCount())
+            return PaletteAt(0).Id;
+        const ThemeFamily& family = kFamilies[choice.Family];
+        const char* id = family.Ids[static_cast<std::size_t>(choice.Mode)];
+        return id ? id : family.Ids[0];
+    }
+
+    std::string_view ResolvePaletteId(std::string_view id, bool systemLight)
+    {
+        ThemeChoice choice;
+        if (!FindChoice(id, choice) || choice.Mode != ThemeMode::System)
+            return id;
+        return ThemeIdOf({ choice.Family, systemLight ? ThemeMode::Light : ThemeMode::Dark });
     }
 
     bool SeparatesByTone(const Palette& palette)

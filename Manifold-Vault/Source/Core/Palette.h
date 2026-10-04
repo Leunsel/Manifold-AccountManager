@@ -35,5 +35,31 @@ namespace Bunker
 
     std::string_view PaletteIdForHeaderCode(std::uint8_t code);
 
+    enum class ThemeMode : std::uint8_t
+    {
+        Dark,
+        Oled,
+        Light,
+        System,
+    };
+
+    inline constexpr std::size_t kThemeModeCount = 4;
+
+    struct ThemeChoice
+    {
+        std::size_t Family = 0;
+        ThemeMode Mode = ThemeMode::Dark;
+    };
+
+    std::size_t ThemeFamilyCount();
+
+    bool ThemeModeAvailable(std::size_t family, ThemeMode mode);
+
+    ThemeChoice ThemeChoiceOf(std::string_view id);
+
+    std::string_view ThemeIdOf(ThemeChoice choice);
+
+    std::string_view ResolvePaletteId(std::string_view id, bool systemLight);
+
     bool SeparatesByTone(const Palette& palette);
 }

@@ -31,6 +31,7 @@
 #include "imgui.h"
 
 #include <cfloat>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <memory>
@@ -57,7 +58,9 @@ namespace Bunker::UI::Settings
 
             int Language = 0;
 
-            int Theme = 0;
+            int Family = 0;
+            int Mode = 0;
+            int TextSize = 1;
             bool ColouredIcons = true;
 
             bool Backups = true;
@@ -107,7 +110,13 @@ namespace Bunker::UI::Settings
             for (std::size_t i = 0; i < Lang::kLanguageCount; ++i)
                 if (s.Language == Lang::kLanguages[i].Code)
                     g_form.Language = static_cast<int>(i);
-            g_form.Theme = static_cast<int>(PaletteIndex(s.Theme));
+            const ThemeChoice theme = ThemeChoiceOf(s.Theme);
+            g_form.Family = static_cast<int>(theme.Family);
+            g_form.Mode = static_cast<int>(theme.Mode);
+            g_form.TextSize = 1;
+            for (std::size_t i = 0; i < std::size(Vault::kTextSizes); ++i)
+                if (Vault::kTextSizes[i] == Vault::TextSizePercent(s))
+                    g_form.TextSize = static_cast<int>(i);
             g_form.ColouredIcons = !s.MonochromeIcons;
             g_form.Backups = s.BackupEnabled;
             g_form.Keep = static_cast<int>(s.BackupKeep);
@@ -207,6 +216,62 @@ namespace Bunker::UI::Settings
                 if (std::strcmp(n.Id, id) == 0)
                     return T(n.Name);
             return id;
+        }
+
+        const char* FamilyName(std::size_t family)
+        {
+            struct Named { const char* Id; Str Name; };
+            static constexpr Named kNames[] = {
+                { "arc", Str::Settings_ThemeArc },
+                { "red", Str::Settings_FamilyRed },
+                { "green", Str::Settings_FamilyGreen },
+                { "dark", Str::Settings_FamilyBlue },
+                { "mint", Str::Settings_ThemeMint },
+                { "midnight", Str::Settings_ThemeMidnight },
+                { "terminal", Str::Settings_ThemeTerminal },
+            };
+            const std::string_view id = ThemeIdOf({ family, ThemeMode::Dark });
+            for (const Named& n : kNames)
+                if (id == n.Id)
+                    return T(n.Name);
+            return PaletteAt(PaletteIndex(id)).Id;
+        }
+
+        bool Segments(const char* id, const Str* labels, const bool* enabled, int count,
+                      int& selected)
+        {
+            bool changed = false;
+            const float gap = Px(4.0f);
+            const float width = std::floor(
+                (ImGui::GetContentRegionAvail().x - gap * static_cast<float>(count - 1)) /
+                static_cast<float>(count));
+            ImGui::PushID(id);
+            for (int i = 0; i < count; ++i)
+            {
+                if (i > 0)
+                    ImGui::SameLine(0, gap);
+                const bool on = i == selected;
+                ImGui::BeginDisabled(!enabled[i]);
+                if (on)
+                {
+                    ImGui::PushStyleColor(ImGuiCol_Button, Theme::Color(Token::AccentDim));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Theme::Color(Token::AccentDim));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, Theme::Color(Token::AccentDim));
+                    ImGui::PushStyleColor(ImGuiCol_Text, Theme::Color(Token::TextPrimary));
+                }
+                ImGui::PushID(i);
+                if (ImGui::Button(T(labels[i]), ImVec2(width, Px(30.0f))) && !on)
+                {
+                    selected = i;
+                    changed = true;
+                }
+                ImGui::PopID();
+                if (on)
+                    ImGui::PopStyleColor(4);
+                ImGui::EndDisabled();
+            }
+            ImGui::PopID();
+            return changed;
         }
 
         ImU32 PaletteColour(std::uint32_t rgb)
@@ -1037,19 +1102,23 @@ namespace Bunker::UI::Settings
 
         BeginCard("##card-theme", columns.Next());
         CardHeader(ICON_FA_PALETTE, T(Str::Settings_CardTheme), nullptr);
+        Row(T(Str::Settings_ThemeColour));
         ImGui::SetNextItemWidth(-FLT_MIN);
-        if (ImGui::BeginCombo("##theme", ThemeName(static_cast<std::size_t>(g_form.Theme))))
+        if (ImGui::BeginCombo("##theme", FamilyName(static_cast<std::size_t>(g_form.Family)),
+                              ImGuiComboFlags_HeightLarge))
         {
-            for (std::size_t i = 0; i < PaletteCount(); ++i)
+            for (std::size_t i = 0; i < ThemeFamilyCount(); ++i)
             {
-                const Palette& p = PaletteAt(i);
-                const bool selected = g_form.Theme == static_cast<int>(i);
+                const Palette& p = PaletteAt(PaletteIndex(ThemeIdOf({ i, ThemeMode::Dark })));
+                const bool selected = g_form.Family == static_cast<int>(i);
                 ImGui::PushID(static_cast<int>(i));
                 const ImVec2 at = ImGui::GetCursorScreenPos();
                 const float rowHeight = ImGui::GetTextLineHeight() + Px(8.0f);
                 if (ImGui::Selectable("##theme-row", selected, 0, ImVec2(0, rowHeight)))
                 {
-                    g_form.Theme = static_cast<int>(i);
+                    g_form.Family = static_cast<int>(i);
+                    if (!ThemeModeAvailable(i, static_cast<ThemeMode>(g_form.Mode)))
+                        g_form.Mode = static_cast<int>(ThemeMode::Dark);
                     commit = true;
                 }
                 if (selected)
@@ -1065,10 +1134,36 @@ namespace Bunker::UI::Settings
                                     swatch * 0.24f, PaletteColour(p.AccentCore));
                 dl->AddText(ImVec2(s1.x + Px(10.0f),
                                    at.y + (rowHeight - ImGui::GetTextLineHeight()) * 0.5f),
-                            ImGui::GetColorU32(ImGuiCol_Text), ThemeName(i));
+                            ImGui::GetColorU32(ImGuiCol_Text), FamilyName(i));
                 ImGui::PopID();
             }
             ImGui::EndCombo();
+        }
+
+        ImGui::Dummy(Px(0, 4));
+        Row(T(Str::Settings_ThemeBrightness));
+        {
+            static constexpr Str kModes[kThemeModeCount] = {
+                Str::Settings_ModeDark, Str::Settings_ModeOled, Str::Settings_ModeLight,
+                Str::Settings_ModeSystem };
+            bool offered[kThemeModeCount] = {};
+            for (std::size_t m = 0; m < kThemeModeCount; ++m)
+                offered[m] = ThemeModeAvailable(static_cast<std::size_t>(g_form.Family),
+                                                static_cast<ThemeMode>(m));
+            if (Segments("##mode", kModes, offered, static_cast<int>(kThemeModeCount), g_form.Mode))
+                commit = true;
+        }
+
+        ImGui::Dummy(Px(0, 4));
+        Row(T(Str::Settings_TextSize));
+        {
+            static constexpr Str kSizes[] = { Str::Settings_TextSmall, Str::Settings_TextNormal,
+                                              Str::Settings_TextLarge, Str::Settings_TextLarger };
+            static_assert(std::size(kSizes) == std::size(Vault::kTextSizes));
+            const bool offered[] = { true, true, true, true };
+            if (Segments("##text-size", kSizes, offered, static_cast<int>(std::size(kSizes)),
+                         g_form.TextSize))
+                commit = true;
         }
         Hint(T(Str::Settings_ThemeNote));
 
@@ -1211,8 +1306,11 @@ namespace Bunker::UI::Settings
         draft.FocusGraceSeconds = static_cast<std::uint32_t>(g_form.GraceSeconds);
         draft.ClipboardClearSeconds = static_cast<std::uint32_t>(g_form.ClipSeconds);
         draft.Language = Lang::kLanguages[g_form.Language].Code;
-        draft.Theme = g_form.Theme == 0 ? std::string()
-                                        : std::string(PaletteAt(static_cast<std::size_t>(g_form.Theme)).Id);
+        const std::string_view theme = ThemeIdOf(
+            { static_cast<std::size_t>(g_form.Family), static_cast<ThemeMode>(g_form.Mode) });
+        draft.Theme = theme == PaletteAt(0).Id ? std::string() : std::string(theme);
+        draft.TextSize = Vault::kTextSizes[static_cast<std::size_t>(
+            Clamp(g_form.TextSize, 0, static_cast<int>(std::size(Vault::kTextSizes)) - 1))];
         draft.MonochromeIcons = !g_form.ColouredIcons;
         draft.BackupEnabled = g_form.Backups;
         draft.BackupKeep = static_cast<std::uint32_t>(g_form.Keep);

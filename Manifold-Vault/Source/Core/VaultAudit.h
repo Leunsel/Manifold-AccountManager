@@ -22,10 +22,12 @@ namespace Bunker::Vault
         bool CommonPassword = false;
         bool NoSecondFactor = false;
         bool OldPassword = false;
+        bool InsecureLink = false;
 
         bool Any() const
         {
-            return ReusedPassword || WeakPassword || CommonPassword || NoSecondFactor;
+            return ReusedPassword || WeakPassword || CommonPassword || NoSecondFactor ||
+                   InsecureLink;
         }
     };
 
@@ -39,6 +41,7 @@ namespace Bunker::Vault
         std::size_t WeakPasswords = 0;
         std::size_t CommonPasswords = 0;
         std::size_t OldPasswords = 0;
+        std::size_t InsecureLinks = 0;
 
         std::size_t ReusedEntries = 0;
         std::size_t ReuseGroups = 0;

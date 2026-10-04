@@ -39,9 +39,10 @@ namespace Bunker::Vault
         inline constexpr std::size_t KdfOpsLimit = 24;
         inline constexpr std::size_t KdfMemLimit = 32;
         inline constexpr std::size_t KdfAlgorithm = 40;
-        // Colour scheme hint for the unlock screen: unencrypted, but authenticated.
+        // Hints for the unlock screen (colour scheme, text size): unencrypted, but authenticated.
         inline constexpr std::size_t GateTheme = 41;
-        inline constexpr std::size_t Reserved1 = 42;
+        inline constexpr std::size_t GateTextSize = 42;
+        inline constexpr std::size_t Reserved1 = 43;
         inline constexpr std::size_t KdfSalt = 48;
         inline constexpr std::size_t BodyNonce = 64;
         inline constexpr std::size_t Generation = 88;
@@ -154,5 +155,7 @@ namespace Bunker::Vault
         MonochromeIcons = 14,
 
         ListOrder = 15,
+
+        TextSize = 16,
     };
 }

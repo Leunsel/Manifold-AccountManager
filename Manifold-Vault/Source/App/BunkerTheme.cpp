@@ -5,6 +5,8 @@
 
 #include <cmath>
 
+#include <windows.h>
+
 namespace Bunker::Theme
 {
     namespace
@@ -61,12 +63,27 @@ namespace Bunker::Theme
             return (channel <= 0.04045f) ? (channel / 12.92f)
                                          : std::pow((channel + 0.055f) / 1.055f, 2.4f);
         }
+
+        bool SystemPrefersLight()
+        {
+            DWORD light = 0;
+            DWORD size = sizeof(light);
+            if (::RegGetValueW(HKEY_CURRENT_USER,
+                               L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+                               L"AppsUseLightTheme", RRF_RT_REG_DWORD, nullptr, &light,
+                               &size) != ERROR_SUCCESS)
+                return true;
+            return light != 0;
+        }
     }
 
     ImVec4 Color(Token t) { return FromHex(Hex(t), 1.0f); }
     ImVec4 Color(Token t, float alpha) { return FromHex(Hex(t), alpha); }
 
-    void SetActive(std::string_view paletteId) { g_active = PaletteIndex(paletteId); }
+    void SetActive(std::string_view paletteId)
+    {
+        g_active = PaletteIndex(ResolvePaletteId(paletteId, SystemPrefersLight()));
+    }
     std::size_t ActiveIndex() { return g_active; }
     bool IsLight() { return PaletteAt(g_active).Light; }
     bool SeparatesByTone() { return Bunker::SeparatesByTone(PaletteAt(g_active)); }

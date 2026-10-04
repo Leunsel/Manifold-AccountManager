@@ -39,13 +39,23 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 namespace
 {
-    std::string_view GateThemeOf(const std::string& path)
+    struct GateHints
+    {
+        std::string_view Theme;
+        std::uint32_t TextSize = Bunker::Vault::kDefaultTextSize;
+    };
+
+    GateHints GateHintsOf(const std::string& path)
     {
         using Bunker::Vault::VaultFile;
         VaultFile::HeaderInfo info;
+        GateHints hints;
         if (!VaultFile::PeekHeader(Bunker::RealFileSystem(), path, info).IsOk())
-            return {};
-        return Bunker::PaletteIdForHeaderCode(info.GateTheme);
+            return hints;
+        hints.Theme = Bunker::PaletteIdForHeaderCode(info.GateTheme);
+        if (info.GateTextSize != 0)
+            hints.TextSize = Bunker::Vault::NearestTextSize(info.GateTextSize);
+        return hints;
     }
 
     constexpr double kVeilSeconds = 0.20;
@@ -181,7 +191,7 @@ namespace Bunker
         MONITORINFO info = { sizeof(info), {}, {}, 0 };
         if (!monitor || !::GetMonitorInfoW(monitor, &info))
             return;
-        const float scale = static_cast<float>(m_dpi) / 96.0f;
+        const float scale = WindowScale();
         const LONG workWidth = info.rcWork.right - info.rcWork.left;
         const LONG workHeight = info.rcWork.bottom - info.rcWork.top;
         const LONG width = (std::min)(static_cast<LONG>(kWindowWidth * scale), workWidth);
@@ -312,12 +322,75 @@ namespace Bunker
         if (m_device) { m_device->Release(); m_device = nullptr; }
     }
 
+    float Application::WindowScale() const
+    {
+        return static_cast<float>(m_dpi) / 96.0f * m_textScale;
+    }
+
+    SIZE Application::MinimumWindowSize() const
+    {
+        const float scale = WindowScale();
+        SIZE size = { static_cast<LONG>(kWindowWidth * scale),
+                      static_cast<LONG>(kWindowHeight * scale) };
+        if (const HMONITOR monitor = ::MonitorFromWindow(m_hwnd, MONITOR_DEFAULTTONEAREST))
+        {
+            MONITORINFO info = { sizeof(info), {}, {}, 0 };
+            if (::GetMonitorInfoW(monitor, &info))
+            {
+                size.cx = (std::min)(size.cx, info.rcWork.right - info.rcWork.left);
+                size.cy = (std::min)(size.cy, info.rcWork.bottom - info.rcWork.top);
+            }
+        }
+        return size;
+    }
+
+    void Application::GrowToMinimumSize()
+    {
+        RECT r;
+        if (!m_hwnd || ::IsZoomed(m_hwnd) || ::IsIconic(m_hwnd) || !::GetWindowRect(m_hwnd, &r))
+            return;
+        const SIZE least = MinimumWindowSize();
+        const LONG width = (std::max)(r.right - r.left, least.cx);
+        const LONG height = (std::max)(r.bottom - r.top, least.cy);
+        if (width == r.right - r.left && height == r.bottom - r.top)
+            return;
+
+        LONG x = r.left;
+        LONG y = r.top;
+        MONITORINFO info = { sizeof(info), {}, {}, 0 };
+        if (::GetMonitorInfoW(::MonitorFromWindow(m_hwnd, MONITOR_DEFAULTTONEAREST), &info))
+        {
+            x = (std::max)(info.rcWork.left, (std::min)(x, info.rcWork.right - width));
+            y = (std::max)(info.rcWork.top, (std::min)(y, info.rcWork.bottom - height));
+        }
+        ::SetWindowPos(m_hwnd, nullptr, x, y, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+
+    void Application::ApplyTextSize(std::uint32_t percent)
+    {
+        m_pendingTextScale = static_cast<float>(Vault::NearestTextSize(percent)) / 100.0f;
+        m_textScalePending = true;
+    }
+
+    void Application::ApplyPendingTextSize()
+    {
+        if (!m_textScalePending)
+            return;
+        m_textScalePending = false;
+        if (m_pendingTextScale == m_textScale)
+            return;
+        m_textScale = m_pendingTextScale;
+        RescaleForDpi(m_dpi);
+        GrowToMinimumSize();
+    }
+
     void Application::RescaleForDpi(UINT dpi)
     {
         m_dpi = dpi;
-        const float scale = m_scaleOverride > 0.0f
-                                ? m_scaleOverride
-                                : static_cast<float>(dpi) / 96.0f;
+        const float scale = (m_scaleOverride > 0.0f
+                                 ? m_scaleOverride
+                                 : static_cast<float>(dpi) / 96.0f) *
+                            m_textScale;
 
         ImGuiStyle& style = ImGui::GetStyle();
         const auto* base = static_cast<const ImGuiStyle*>(m_baseStyle);
@@ -329,6 +402,23 @@ namespace Bunker
             style.FrameBorderSize = 2.0f;
             style.ChildBorderSize = 2.0f;
             style.PopupBorderSize = 2.0f;
+        }
+        else if (scale < 1.0f)
+        {
+            // ScaleAllSizes truncates, so below 100 % every one-pixel line would vanish.
+            style.WindowBorderSize = base->WindowBorderSize;
+            style.ChildBorderSize = base->ChildBorderSize;
+            style.PopupBorderSize = base->PopupBorderSize;
+            style.FrameBorderSize = base->FrameBorderSize;
+            style.ImageBorderSize = base->ImageBorderSize;
+            style.TabBorderSize = base->TabBorderSize;
+            style.TabBarBorderSize = base->TabBarBorderSize;
+            style.TabBarOverlineSize = base->TabBarOverlineSize;
+            style.TreeLinesSize = base->TreeLinesSize;
+            style.DragDropTargetBorderSize = base->DragDropTargetBorderSize;
+            style.InputTextCursorSize = base->InputTextCursorSize;
+            style.SeparatorSize = base->SeparatorSize;
+            style.SeparatorTextBorderSize = base->SeparatorTextBorderSize;
         }
 
         style.FontScaleDpi = scale;
@@ -356,7 +446,10 @@ namespace Bunker
         } frameDone{ m_inFrame };
 
         if (!UI::GateHoldsTheme())
+        {
             ApplyPendingTheme();
+            ApplyPendingTextSize();
+        }
 
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
@@ -411,7 +504,11 @@ namespace Bunker
 
     bool Application::Initialise(HINSTANCE instance, int showCommand)
     {
-        Theme::SetActive(GateThemeOf(m_session.Path()));
+        const GateHints gate = GateHintsOf(m_session.Path());
+        m_pendingTheme.assign(gate.Theme.data(), gate.Theme.size());
+        Theme::SetActive(m_pendingTheme);
+        m_textScale = static_cast<float>(gate.TextSize) / 100.0f;
+        m_pendingTextScale = m_textScale;
 
         if (!CreateAppWindow(instance, showCommand))
             return false;
@@ -424,7 +521,7 @@ namespace Bunker
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.ConfigDpiScaleFonts = (m_scaleOverride <= 0.0f);
+        io.ConfigDpiScaleFonts = false;
         io.IniFilename = nullptr;
         io.LogFilename = nullptr;
 
@@ -540,6 +637,7 @@ namespace Bunker
         m_lockPolicy.SetSettings(Vault::ToLockSettings(settings));
         SetLanguage(Vault::LanguageCode(settings));
         ApplyTheme(settings.Theme);
+        ApplyTextSize(Vault::TextSizePercent(settings));
         Theme::SetColouredIcons(!settings.MonochromeIcons);
     }
 
@@ -592,14 +690,16 @@ namespace Bunker
             if (unlocked)
             {
                 ApplyVaultSettings();
-                if (m_session.Vault().HeaderThemeStale())
+                if (m_session.Vault().HeaderHintsStale())
                     (void)m_session.Vault().Save(RealFileSystem(), m_session.Path());
             }
             else
             {
                 m_lockPolicy.SetSettings(LockSettings{});
                 SetLanguage("en");
-                ApplyTheme(GateThemeOf(m_session.Path()));
+                const GateHints gate = GateHintsOf(m_session.Path());
+                ApplyTheme(gate.Theme);
+                ApplyTextSize(gate.TextSize);
                 Theme::SetColouredIcons(true);
             }
             m_policyFromVault = unlocked;
@@ -781,27 +881,10 @@ namespace Bunker
 
         case WM_GETMINMAXINFO:
         {
-            const float scale = static_cast<float>(m_dpi) / 96.0f;
-            LONG minWidth = static_cast<LONG>(kWindowWidth * scale);
-            LONG minHeight = static_cast<LONG>(kWindowHeight * scale);
-
-            if (const HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST))
-            {
-                MONITORINFO info = { sizeof(info), {}, {}, 0 };
-                if (::GetMonitorInfoW(monitor, &info))
-                {
-                    const LONG workWidth = info.rcWork.right - info.rcWork.left;
-                    const LONG workHeight = info.rcWork.bottom - info.rcWork.top;
-                    if (minWidth > workWidth)
-                        minWidth = workWidth;
-                    if (minHeight > workHeight)
-                        minHeight = workHeight;
-                }
-            }
-
+            const SIZE least = MinimumWindowSize();
             auto* mmi = reinterpret_cast<MINMAXINFO*>(lp);
-            mmi->ptMinTrackSize.x = minWidth;
-            mmi->ptMinTrackSize.y = minHeight;
+            mmi->ptMinTrackSize.x = least.cx;
+            mmi->ptMinTrackSize.y = least.cy;
             return 0;
         }
 
@@ -812,6 +895,8 @@ namespace Bunker
 
         case WM_SETTINGCHANGE:
             FollowSystemAnimations();
+            if (lp && ::lstrcmpiW(reinterpret_cast<const wchar_t*>(lp), L"ImmersiveColorSet") == 0)
+                m_themePending = true;
             break;
 
         case WM_ERASEBKGND:

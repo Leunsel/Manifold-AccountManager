@@ -10,4 +10,6 @@ namespace Bunker
     bool IsOpenableWebLink(std::string_view value);
 
     std::string_view LinkToOpen(std::string_view value);
+
+    bool IsUnencryptedWebLink(std::string_view value);
 }

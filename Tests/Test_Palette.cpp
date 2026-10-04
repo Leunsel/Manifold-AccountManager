@@ -133,6 +133,62 @@ TEST_CASE(Palette_HeaderNumbersNeverMove)
     CHECK(PaletteHeaderCode("green-oled") == 15);
     CHECK(PaletteHeaderCode("green-light") == 16);
     CHECK(PaletteHeaderCode("blue-oled") == 17);
+    CHECK(PaletteHeaderCode("red-auto") == 18);
+    CHECK(PaletteHeaderCode("green-auto") == 19);
+    CHECK(PaletteHeaderCode("blue-auto") == 20);
+}
+
+TEST_CASE(Palette_FollowingWindowsPicksTheMatchingVariant)
+{
+    CHECK(ResolvePaletteId("red-auto", false) == "red");
+    CHECK(ResolvePaletteId("red-auto", true) == "red-light");
+    CHECK(ResolvePaletteId("green-auto", false) == "green");
+    CHECK(ResolvePaletteId("green-auto", true) == "green-light");
+    CHECK(ResolvePaletteId("blue-auto", false) == "dark");
+    CHECK(ResolvePaletteId("blue-auto", true) == "light");
+    for (const char* fixed : { "mint", "red-oled", "light", "black", "", "sepia-2031" })
+    {
+        CHECK_MSG(ResolvePaletteId(fixed, true) == fixed, std::string(fixed) + " changed with Windows");
+        CHECK_MSG(ResolvePaletteId(fixed, false) == fixed, std::string(fixed) + " changed with Windows");
+    }
+    for (const char* automatic : { "red-auto", "green-auto", "blue-auto" })
+        CHECK_MSG(PaletteIdForHeaderCode(PaletteHeaderCode(automatic)) == automatic,
+                  std::string(automatic) + ": the unlock screen cannot follow Windows");
+}
+
+TEST_CASE(Palette_EveryChoiceInTheSettingsMapsBackToItself)
+{
+    std::size_t covered = 0;
+    for (std::size_t family = 0; family < ThemeFamilyCount(); ++family)
+    {
+        CHECK_MSG(ThemeModeAvailable(family, ThemeMode::Dark), "a colour without a dark variant");
+        for (std::size_t m = 0; m < kThemeModeCount; ++m)
+        {
+            const ThemeMode mode = static_cast<ThemeMode>(m);
+            const std::string id(ThemeIdOf({ family, mode }));
+            if (!ThemeModeAvailable(family, mode))
+            {
+                CHECK_MSG(id == ThemeIdOf({ family, ThemeMode::Dark }), id + ": no fallback to dark");
+                continue;
+            }
+            const ThemeChoice back = ThemeChoiceOf(id);
+            CHECK_MSG(back.Family == family && back.Mode == mode, id + ": does not map back");
+            if (mode != ThemeMode::System)
+            {
+                CHECK_MSG(PaletteAt(PaletteIndex(id)).Id == id, id + ": not a palette");
+                ++covered;
+            }
+        }
+    }
+    CHECK_EQ(covered, PaletteCount());
+
+    CHECK(ThemeIdOf({}) == PaletteAt(0).Id);
+    CHECK(ThemeChoiceOf("").Family == 0);
+    CHECK(ThemeChoiceOf("sepia-2031").Family == 0);
+    CHECK(ThemeIdOf(ThemeChoiceOf("moss")) == "green");
+    CHECK(ThemeIdOf(ThemeChoiceOf("black")) == "blue-oled");
+    CHECK(ThemeIdOf(ThemeChoiceOf("aubergine")) == "midnight");
+    CHECK(ThemeIdOf({ ThemeFamilyCount(), ThemeMode::Light }) == PaletteAt(0).Id);
 }
 
 TEST_CASE(Palette_RetiredSchemesResolveToTheirSuccessor)

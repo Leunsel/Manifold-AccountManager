@@ -33,6 +33,28 @@ namespace Bunker::Vault
         settings.BackupMinIntervalSeconds = Clamp(settings.BackupMinIntervalSeconds,
                                                   kMinBackupIntervalSeconds,
                                                   kMaxBackupIntervalSeconds);
+        settings.TextSize = TextSizePercent(settings);
+    }
+
+    std::uint32_t NearestTextSize(std::uint32_t percent)
+    {
+        std::uint32_t best = kDefaultTextSize;
+        std::uint32_t bestDistance = UINT32_MAX;
+        for (const std::uint32_t size : kTextSizes)
+        {
+            const std::uint32_t distance = size > percent ? size - percent : percent - size;
+            if (distance < bestDistance)
+            {
+                best = size;
+                bestDistance = distance;
+            }
+        }
+        return best;
+    }
+
+    std::uint32_t TextSizePercent(const Settings& settings)
+    {
+        return NearestTextSize(settings.TextSize);
     }
 
     LockSettings ToLockSettings(const Settings& settings)

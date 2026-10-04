@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <cwchar>
 
 #include <windows.h>
 
@@ -60,6 +61,35 @@ namespace Bunker::UI
     bool SecretField::CapsLockOn()
     {
         return (::GetKeyState(VK_CAPITAL) & 0x0001) != 0;
+    }
+
+    std::string SecretField::KeyboardLayout()
+    {
+        static HKL s_layout = nullptr;
+        static std::string s_region;
+        const HKL layout = ::GetKeyboardLayout(0);
+        if (layout == s_layout)
+            return s_region;
+        s_layout = layout;
+        s_region.clear();
+
+        LANGID language = LOWORD(reinterpret_cast<UINT_PTR>(layout));
+        wchar_t klid[KL_NAMELENGTH] = {};
+        if (::GetKeyboardLayoutNameW(klid))
+            language = static_cast<LANGID>(std::wcstoul(klid, nullptr, 16) & 0xFFFFu);
+
+        wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {};
+        if (::LCIDToLocaleName(MAKELCID(language, SORT_DEFAULT), locale, LOCALE_NAME_MAX_LENGTH, 0) <= 0)
+            return s_region;
+        const wchar_t* dash = std::wcsrchr(locale, L'-');
+        for (const wchar_t* c = dash ? dash + 1 : locale; *c != L'\0'; ++c)
+        {
+            if (*c >= L'a' && *c <= L'z')
+                s_region.push_back(static_cast<char>(*c - L'a' + L'A'));
+            else if (*c < 0x80)
+                s_region.push_back(static_cast<char>(*c));
+        }
+        return s_region;
     }
 
     void SecretField::Append(unsigned int cp)
