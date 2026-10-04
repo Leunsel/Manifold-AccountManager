@@ -18,6 +18,72 @@ namespace Bunker
               0x0A0C0E,
               0xE5484D, 0x7A2326 },
 
+            { "red", false,
+              0x0B0C0D, 0x131416, 0x191A1D, 0x202226, 0x0E0F11,
+              0x2A2C30, 0x373A3F,
+              0xE8E9EB, 0xACAFB5, 0x858991, 0x5B5F66,
+              0xEF4F6C, 0xFF8197, 0x7A2537,
+              0xE8A33D, 0xFFC266, 0x8A6224,
+              0xE5484D, 0xFF6369, 0x7A2326,
+              0x3FB950, 0x1F4B27,
+              0x050506,
+              0xF08A4B, 0x7A3A1E },
+
+            { "red-oled", false,
+              0x000000, 0x000000, 0x000000, 0x0A0A0A, 0x000000,
+              0x242424, 0x333333,
+              0xFAFAFA, 0xA1A1A1, 0x8F8F8F, 0x5A5A5A,
+              0xEF4F6C, 0xFF8197, 0x7A2537,
+              0xE8A33D, 0xFFC266, 0x8A6224,
+              0xE5484D, 0xFF6369, 0x7A2326,
+              0x3FB950, 0x1F4B27,
+              0x000000,
+              0xF08A4B, 0x7A3A1E },
+
+            { "red-light", true,
+              0xDDE1E6, 0xEEF0F3, 0xF8F9FB, 0xFFFFFF, 0xFFFFFF,
+              0xD6DBE1, 0xC2C9D1,
+              0x1A1E23, 0x464E58, 0x5F6873, 0x98A0AA,
+              0xC8234A, 0xA3193B, 0xF7CDD7,
+              0x9A5B00, 0x7F4A00, 0xF0D9B5,
+              0xC42B2F, 0xA51F24, 0xF3C5C6,
+              0x1B7F37, 0xCDEBD5,
+              0x3A414B,
+              0xD9772F, 0xF9DCC6 },
+
+            { "green", false,
+              0x0B0C0D, 0x131416, 0x191A1D, 0x202226, 0x0E0F11,
+              0x2A2C30, 0x373A3F,
+              0xE8E9EB, 0xACAFB5, 0x858991, 0x5B5F66,
+              0x3DD68C, 0x74EDB0, 0x16683F,
+              0xE8A33D, 0xFFC266, 0x8A6224,
+              0xE5484D, 0xFF6369, 0x7A2326,
+              0x3FB950, 0x1F4B27,
+              0x050506,
+              0x2FB8B0, 0x135A55 },
+
+            { "green-oled", false,
+              0x000000, 0x000000, 0x000000, 0x0A0A0A, 0x000000,
+              0x242424, 0x333333,
+              0xFAFAFA, 0xA1A1A1, 0x8F8F8F, 0x5A5A5A,
+              0x3DD68C, 0x74EDB0, 0x16683F,
+              0xE8A33D, 0xFFC266, 0x8A6224,
+              0xE5484D, 0xFF6369, 0x7A2326,
+              0x3FB950, 0x1F4B27,
+              0x000000,
+              0x2FB8B0, 0x135A55 },
+
+            { "green-light", true,
+              0xDDE1E6, 0xEEF0F3, 0xF8F9FB, 0xFFFFFF, 0xFFFFFF,
+              0xD6DBE1, 0xC2C9D1,
+              0x1A1E23, 0x464E58, 0x5F6873, 0x98A0AA,
+              0x15874F, 0x0E6E3F, 0xC9EDD8,
+              0x9A5B00, 0x7F4A00, 0xF0D9B5,
+              0xC42B2F, 0xA51F24, 0xF3C5C6,
+              0x1B7F37, 0xCDEBD5,
+              0x3A414B,
+              0x1F9A93, 0xCDEDEA },
+
             { "dark", false,
               0x0B0C0D, 0x131416, 0x191A1D, 0x202226, 0x0E0F11,
               0x2A2C30, 0x373A3F,
@@ -27,6 +93,17 @@ namespace Bunker
               0xE5484D, 0xFF6369, 0x7A2326,
               0x3FB950, 0x1F4B27,
               0x050506,
+              0x8E6BF0, 0x47347A },
+
+            { "blue-oled", false,
+              0x000000, 0x000000, 0x000000, 0x0A0A0A, 0x000000,
+              0x242424, 0x333333,
+              0xFAFAFA, 0xA1A1A1, 0x8F8F8F, 0x5A5A5A,
+              0x5B9BF0, 0x86B8FF, 0x2D4D78,
+              0xE8A33D, 0xFFC266, 0x8A6224,
+              0xE5484D, 0xFF6369, 0x7A2326,
+              0x3FB950, 0x1F4B27,
+              0x000000,
               0x8E6BF0, 0x47347A },
 
             { "light", true,
@@ -40,28 +117,6 @@ namespace Bunker
               0x3A414B,
               0x6A4BC9, 0xDDD3F5 },
 
-            { "black", false,
-              0x000000, 0x000000, 0x000000, 0x0A0A0A, 0x000000,
-              0x242424, 0x333333,
-              0xFAFAFA, 0xA1A1A1, 0x8F8F8F, 0x5A5A5A,
-              0xEDEDED, 0xFFFFFF, 0x3A3A3A,
-              0xE8A33D, 0xFFC266, 0x8A6224,
-              0xE5484D, 0xFF6369, 0x7A2326,
-              0x3FB950, 0x1F4B27,
-              0x000000,
-              0x8F8F8F, 0x2A2A2A },
-
-            { "fjord", false,
-              0x080D0F, 0x0F1618, 0x142024, 0x1A292E, 0x0B1214,
-              0x21343A, 0x2C444B,
-              0xE3EEF0, 0xA2B9BE, 0x7A9398, 0x52686D,
-              0x3CC7C0, 0x72E0DA, 0x1D5F5B,
-              0xE8A33D, 0xFFC266, 0x8A6224,
-              0xE5484D, 0xFF6369, 0x7A2326,
-              0x3FB950, 0x1F4B27,
-              0x050809,
-              0x3D8BD9, 0x1C3F63 },
-
             { "mint", false,
               0x070C0D, 0x0A1113, 0x0D1719, 0x132125, 0x081012,
               0x1A2A2E, 0x24393E,
@@ -73,17 +128,6 @@ namespace Bunker
               0x040708,
               0x2BA8D9, 0x12465C },
 
-            { "aubergine", false,
-              0x0D0A10, 0x141018, 0x1B1521, 0x231B2B, 0x100C14,
-              0x2E2438, 0x3B2F48,
-              0xECE6F2, 0xB3A8BF, 0x9084A0, 0x5F5469,
-              0xB48CFF, 0xCDB0FF, 0x553E80,
-              0xE8A33D, 0xFFC266, 0x8A6224,
-              0xE5484D, 0xFF6369, 0x7A2326,
-              0x3FB950, 0x1F4B27,
-              0x080609,
-              0xE06AB8, 0x6B2E58 },
-
             { "midnight", false,
               0x0A0C18, 0x0E1120, 0x131729, 0x1A1F35, 0x0A0D19,
               0x232A45, 0x2E3657,
@@ -94,17 +138,6 @@ namespace Bunker
               0x3FB950, 0x1F4B27,
               0x05060C,
               0xB27CF5, 0x4F3578 },
-
-            { "moss", false,
-              0x0C0F0B, 0x111510, 0x171C15, 0x1E251B, 0x0C0F0B,
-              0x283024, 0x343E2F,
-              0xE7ECE3, 0xAAB5A2, 0x828E7A, 0x596352,
-              0xA3C46A, 0xC2DE8C, 0x4D5E30,
-              0xE8A33D, 0xFFC266, 0x8A6224,
-              0xE5484D, 0xFF6369, 0x7A2326,
-              0x3FB950, 0x1F4B27,
-              0x070906,
-              0xD4B04F, 0x5C4C22 },
 
             { "terminal", false,
               0x000000, 0x040A06, 0x07120A, 0x0C1B10, 0x020503,
@@ -132,9 +165,22 @@ namespace Bunker
         };
 
         constexpr HeaderCode kHeaderCodes[] = {
-            { "arc", 1 },   { "dark", 2 },      { "light", 3 },     { "black", 4 },
-            { "fjord", 5 }, { "mint", 6 },      { "aubergine", 7 }, { "midnight", 8 },
-            { "moss", 9 },  { "terminal", 10 },
+            { "arc", 1 },        { "dark", 2 },        { "light", 3 },       { "black", 4 },
+            { "fjord", 5 },      { "mint", 6 },        { "aubergine", 7 },   { "midnight", 8 },
+            { "moss", 9 },       { "terminal", 10 },   { "red", 11 },        { "red-oled", 12 },
+            { "red-light", 13 }, { "green", 14 },      { "green-oled", 15 }, { "green-light", 16 },
+            { "blue-oled", 17 },
+        };
+
+        // Retired schemes: ids stored in vaults resolve to the closest current one.
+        struct Retired
+        {
+            const char* Id;
+            const char* Now;
+        };
+
+        constexpr Retired kRetired[] = {
+            { "black", "blue-oled" }, { "fjord", "mint" }, { "aubergine", "midnight" }, { "moss", "green" },
         };
     }
 
@@ -153,6 +199,9 @@ namespace Bunker
         for (std::size_t i = 0; i < PaletteCount(); ++i)
             if (SameId(id, kPalettes[i].Id))
                 return i;
+        for (const Retired& r : kRetired)
+            if (SameId(id, r.Id))
+                return PaletteIndex(r.Now);
         return 0;
     }
 

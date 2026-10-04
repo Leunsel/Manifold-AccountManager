@@ -62,15 +62,15 @@ TEST_CASE(Palette_LightMeansALightSurface)
     }
 }
 
-TEST_CASE(Palette_OnlyTheBlackThemeNeedsColumnRules)
+TEST_CASE(Palette_OnlyTheOledThemesNeedColumnRules)
 {
     for (std::size_t i = 0; i < PaletteCount(); ++i)
     {
         const Palette& p = PaletteAt(i);
-        const bool black = std::strcmp(p.Id, "black") == 0;
-        CHECK_MSG(SeparatesByTone(p) == !black,
-                  std::string(p.Id) + (black ? ": separates by tone"
-                                             : ": does NOT separate by tone"));
+        const bool oled = p.Surface == 0x000000 && p.Panel == 0x000000;
+        CHECK_MSG(SeparatesByTone(p) == !oled,
+                  std::string(p.Id) + (oled ? ": separates by tone"
+                                            : ": does NOT separate by tone"));
         if (!SeparatesByTone(p))
             CHECK_MSG(Ratio(p.Line, p.Surface) >= 1.2,
                       std::string(p.Id) + ": the divider disappears into the ground");
@@ -126,6 +126,44 @@ TEST_CASE(Palette_HeaderNumbersNeverMove)
     CHECK(PaletteHeaderCode("midnight") == 8);
     CHECK(PaletteHeaderCode("moss") == 9);
     CHECK(PaletteHeaderCode("terminal") == 10);
+    CHECK(PaletteHeaderCode("red") == 11);
+    CHECK(PaletteHeaderCode("red-oled") == 12);
+    CHECK(PaletteHeaderCode("red-light") == 13);
+    CHECK(PaletteHeaderCode("green") == 14);
+    CHECK(PaletteHeaderCode("green-oled") == 15);
+    CHECK(PaletteHeaderCode("green-light") == 16);
+    CHECK(PaletteHeaderCode("blue-oled") == 17);
+}
+
+TEST_CASE(Palette_RetiredSchemesResolveToTheirSuccessor)
+{
+    CHECK_EQ(PaletteIndex("black"), PaletteIndex("blue-oled"));
+    CHECK_EQ(PaletteIndex("fjord"), PaletteIndex("mint"));
+    CHECK_EQ(PaletteIndex("aubergine"), PaletteIndex("midnight"));
+    CHECK_EQ(PaletteIndex("moss"), PaletteIndex("green"));
+    for (const char* retired : { "black", "fjord", "aubergine", "moss" })
+    {
+        CHECK_MSG(PaletteIndex(retired) != 0, std::string(retired) + " fell back to the default");
+        CHECK_MSG(PaletteIdForHeaderCode(PaletteHeaderCode(retired)) == retired,
+                  std::string(retired) + ": header number lost");
+    }
+}
+
+TEST_CASE(Palette_EveryAccentComesInThreeVariants)
+{
+    for (const char* dark : { "red", "green", "dark" })
+    {
+        const Palette& d = PaletteAt(PaletteIndex(dark));
+        const std::string oledId = std::strcmp(dark, "dark") == 0 ? "blue-oled" : std::string(dark) + "-oled";
+        const Palette& o = PaletteAt(PaletteIndex(oledId));
+        CHECK_MSG(o.AccentCore == d.AccentCore && o.AccentBright == d.AccentBright &&
+                      o.AccentDim == d.AccentDim,
+                  oledId + ": accent differs from the dark variant");
+        CHECK_MSG(o.Surface == 0x000000, oledId + ": not black");
+    }
+    CHECK(PaletteAt(PaletteIndex("red-light")).Light);
+    CHECK(PaletteAt(PaletteIndex("green-light")).Light);
+    CHECK(PaletteAt(PaletteIndex("light")).Light);
 }
 
 TEST_CASE(Palette_TheDefaultGateKeepsItsRed)

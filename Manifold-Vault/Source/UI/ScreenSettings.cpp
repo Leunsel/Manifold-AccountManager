@@ -189,14 +189,17 @@ namespace Bunker::UI::Settings
             struct Named { const char* Id; Str Name; };
             static constexpr Named kNames[] = {
                 { "arc", Str::Settings_ThemeArc },
-                { "dark", Str::Settings_ThemeDark },
-                { "light", Str::Settings_ThemeLight },
-                { "black", Str::Settings_ThemeBlack },
-                { "fjord", Str::Settings_ThemeFjord },
+                { "red", Str::Settings_ThemeRedDark },
+                { "red-oled", Str::Settings_ThemeRedOled },
+                { "red-light", Str::Settings_ThemeRedLight },
+                { "green", Str::Settings_ThemeGreenDark },
+                { "green-oled", Str::Settings_ThemeGreenOled },
+                { "green-light", Str::Settings_ThemeGreenLight },
+                { "dark", Str::Settings_ThemeBlueDark },
+                { "blue-oled", Str::Settings_ThemeBlueOled },
+                { "light", Str::Settings_ThemeBlueLight },
                 { "mint", Str::Settings_ThemeMint },
-                { "aubergine", Str::Settings_ThemeAubergine },
                 { "midnight", Str::Settings_ThemeMidnight },
-                { "moss", Str::Settings_ThemeMoss },
                 { "terminal", Str::Settings_ThemeTerminal },
             };
             const char* id = PaletteAt(index).Id;

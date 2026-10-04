@@ -21,8 +21,9 @@ file next to the program: no account, no cloud, no network access.
 - Automatic backup copies after saving.
 - Auto-lock when idle, minimised, on focus loss, when Windows locks or sleeps;
   copied secrets are removed from the clipboard after a delay.
-- Ten colour schemes, including a light and a monospace terminal scheme; the
-  unlock screen uses the vault's scheme.
+- Thirteen colour schemes: red, green and blue, each as dark, OLED (true black)
+  and light, plus Bearded Arc, Mint, Midnight and a monospace Terminal scheme.
+  The unlock screen uses the vault's scheme.
 - Brand icons for known services, or one of 148 symbols for everything else.
 - English and German user interface.
 
