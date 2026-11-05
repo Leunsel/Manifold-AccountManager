@@ -15,41 +15,53 @@ namespace Bunker::UI
     {
         constexpr int kMaxDepth = 4;
         ImDrawListSplitter g_splitters[kMaxDepth];
+        bool g_tableOpen[kMaxDepth] = {};
         int g_depth = 0;
     }
 
     void BeginBox(const char* id, float width, ImVec2 padding)
     {
         IM_ASSERT(g_depth < kMaxDepth && "BeginBox nested too deeply");
+        const int depth = g_depth++;
         ImDrawList* dl = ImGui::GetWindowDrawList();
-        ImDrawListSplitter& split = g_splitters[g_depth++];
+        ImDrawListSplitter& split = g_splitters[depth];
         split.Split(dl, 2);
         split.SetCurrentChannel(dl, 1);
 
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, padding);
-        ImGui::BeginTable(id, 1, ImGuiTableFlags_PadOuterX | ImGuiTableFlags_NoSavedSettings,
-                          ImVec2(width, 0.0f));
-        ImGui::TableNextRow();
-        ImGui::TableNextColumn();
+        // BeginTable returns false when the window has no room, as when minimised.
+        g_tableOpen[depth] =
+            ImGui::BeginTable(id, 1, ImGuiTableFlags_PadOuterX | ImGuiTableFlags_NoSavedSettings,
+                              ImVec2(width, 0.0f));
+        if (g_tableOpen[depth])
+        {
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+        }
         ImGui::PopStyleVar();
     }
 
     void EndBox(ImU32 fill, ImU32 border, float rounding)
     {
-        ImGui::EndTable();
-        const ImVec2 min = ImGui::GetItemRectMin();
-        const ImVec2 max = ImGui::GetItemRectMax();
-
-        IM_ASSERT(g_depth > 0 && "EndBox ohne BeginBox");
+        IM_ASSERT(g_depth > 0 && "EndBox without BeginBox");
+        const int depth = --g_depth;
         ImDrawList* dl = ImGui::GetWindowDrawList();
-        ImDrawListSplitter& split = g_splitters[--g_depth];
-        split.SetCurrentChannel(dl, 0);
-        dl->AddRectFilled(min, max, fill, rounding);
-        if ((border & IM_COL32_A_MASK) != 0)
+        ImDrawListSplitter& split = g_splitters[depth];
+
+        if (g_tableOpen[depth])
         {
-            const float half = Px(1.0f) * 0.5f;
-            dl->AddRect(ImVec2(min.x + half, min.y + half), ImVec2(max.x - half, max.y - half),
-                        border, rounding, 0, Px(1.0f));
+            ImGui::EndTable();
+            const ImVec2 min = ImGui::GetItemRectMin();
+            const ImVec2 max = ImGui::GetItemRectMax();
+
+            split.SetCurrentChannel(dl, 0);
+            dl->AddRectFilled(min, max, fill, rounding);
+            if ((border & IM_COL32_A_MASK) != 0)
+            {
+                const float half = Px(1.0f) * 0.5f;
+                dl->AddRect(ImVec2(min.x + half, min.y + half), ImVec2(max.x - half, max.y - half),
+                            border, rounding, 0, Px(1.0f));
+            }
         }
         split.Merge(dl);
     }
