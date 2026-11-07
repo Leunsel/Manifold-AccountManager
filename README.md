@@ -21,10 +21,11 @@ file next to the program: no account, no cloud, no network access.
 - Automatic backup copies after saving.
 - Auto-lock when idle, minimised, on focus loss, when Windows locks or sleeps;
   copied secrets are removed from the clipboard after a delay.
-- Thirteen colour schemes: red, green and blue, each as dark, OLED (true black)
-  and light or following the Windows setting, plus Bearded Arc, Mint, Midnight
-  and a monospace Terminal scheme. Four text sizes. The unlock screen uses the
-  vault's scheme and size.
+- Fourteen colour schemes. The default, Manifold, is the look of the other
+  Manifold tools. Then red, green and blue, each as dark, OLED (true black) and
+  light or following the Windows setting, plus Bearded Arc, Mint, Midnight and a
+  monospace Terminal scheme. Four text sizes. The unlock screen uses the vault's
+  scheme and size.
 - Brand icons for known services, or one of 148 symbols for everything else.
 - English and German user interface.
 

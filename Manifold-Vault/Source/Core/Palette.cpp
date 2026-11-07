@@ -7,6 +7,17 @@ namespace Bunker
     namespace
     {
         constexpr Palette kPalettes[] = {
+            { "manifold", false,
+              0x08090B, 0x0F1012, 0x0A0B0D, 0x1D1F24, 0x17181C,
+              0x26282D, 0x33363D,
+              0xE6E8ED, 0xC7C9D1, 0x80858F, 0x575B63,
+              0x2EDB9E, 0x42F0B3, 0x1E5B48,
+              0xF2B352, 0xFFCB7A, 0x7A5626,
+              0xF26B5C, 0xFF8B7E, 0x7A2B24,
+              0x3FB950, 0x1F4B27,
+              0x050506,
+              0x2B9ED9, 0x12405A },
+
             { "arc", false,
               0x0A0C0E, 0x101418, 0x161B21, 0x1C222A, 0x0C0F13,
               0x232A33, 0x2E3742,
@@ -170,6 +181,7 @@ namespace Bunker
             { "moss", 9 },       { "terminal", 10 },   { "red", 11 },        { "red-oled", 12 },
             { "red-light", 13 }, { "green", 14 },      { "green-oled", 15 }, { "green-light", 16 },
             { "blue-oled", 17 }, { "red-auto", 18 },     { "green-auto", 19 }, { "blue-auto", 20 },
+            { "manifold", 21 },
         };
 
         struct ThemeFamily
@@ -179,6 +191,7 @@ namespace Bunker
 
         // Order of the colour choice in the settings; null: mode not offered.
         constexpr ThemeFamily kFamilies[] = {
+            { { "manifold", nullptr, nullptr, nullptr } },
             { { "arc", nullptr, nullptr, nullptr } },
             { { "red", "red-oled", "red-light", "red-auto" } },
             { { "green", "green-oled", "green-light", "green-auto" } },

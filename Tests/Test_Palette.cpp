@@ -80,7 +80,7 @@ TEST_CASE(Palette_OnlyTheOledThemesNeedColumnRules)
 TEST_CASE(Palette_IdsAreUniqueAndTheFirstIsTheDefault)
 {
     CHECK(PaletteCount() >= 9);
-    CHECK(std::strcmp(PaletteAt(0).Id, "arc") == 0);
+    CHECK(std::strcmp(PaletteAt(0).Id, "manifold") == 0);
     for (std::size_t i = 0; i < PaletteCount(); ++i)
     {
         CHECK_EQ(PaletteIndex(PaletteAt(i).Id), i);
@@ -90,7 +90,8 @@ TEST_CASE(Palette_IdsAreUniqueAndTheFirstIsTheDefault)
     }
     CHECK_EQ(PaletteIndex(""), std::size_t{ 0 });
     CHECK_EQ(PaletteIndex("sepia-2031"), std::size_t{ 0 });
-    CHECK_EQ(PaletteIndex("ARC"), std::size_t{ 0 });
+    CHECK_EQ(PaletteIndex("MANIFOLD"), std::size_t{ 0 });
+    CHECK_MSG(PaletteIndex("arc") != 0, "Bearded Arc is no longer selectable");
     CHECK_MSG(&PaletteAt(PaletteCount() + 5) == &PaletteAt(0),
               "an out-of-range index did not fall back to the default");
 }
@@ -136,6 +137,7 @@ TEST_CASE(Palette_HeaderNumbersNeverMove)
     CHECK(PaletteHeaderCode("red-auto") == 18);
     CHECK(PaletteHeaderCode("green-auto") == 19);
     CHECK(PaletteHeaderCode("blue-auto") == 20);
+    CHECK(PaletteHeaderCode("manifold") == 21);
 }
 
 TEST_CASE(Palette_FollowingWindowsPicksTheMatchingVariant)
@@ -222,16 +224,16 @@ TEST_CASE(Palette_EveryAccentComesInThreeVariants)
     CHECK(PaletteAt(PaletteIndex("light")).Light);
 }
 
-TEST_CASE(Palette_TheDefaultGateKeepsItsRed)
+TEST_CASE(Palette_ArcKeepsItsRedGate)
 {
-    const Palette& p = PaletteAt(0);
+    const Palette& p = PaletteAt(PaletteIndex("arc"));
     CHECK_EQ(p.GlowCore, p.RedCore);
     CHECK_EQ(p.GlowDim, p.RedDim);
 }
 
-TEST_CASE(Palette_TheDefaultIsWhatTheProgramHadBefore)
+TEST_CASE(Palette_ArcIsWhatTheProgramHadBefore)
 {
-    const Palette& p = PaletteAt(0);
+    const Palette& p = PaletteAt(PaletteIndex("arc"));
     CHECK_EQ(p.Panel, std::uint32_t{ 0x161B21 });
     CHECK_EQ(Rgb::FromPacked(p.Panel).Packed(), kPanelColour.Packed());
     CHECK_EQ(p.AccentCore, std::uint32_t{ 0xE8A33D });
@@ -239,6 +241,20 @@ TEST_CASE(Palette_TheDefaultIsWhatTheProgramHadBefore)
     CHECK_EQ(p.WarnBright, p.AccentBright);
     CHECK_EQ(p.WarnDim, p.AccentDim);
     CHECK_EQ(p.Shade, p.Void);
+    CHECK(!p.Light);
+}
+
+TEST_CASE(Palette_TheDefaultIsTheManifoldLook)
+{
+    const Palette& p = PaletteAt(0);
+    CHECK_EQ(p.AccentCore, std::uint32_t{ 0x2EDB9E });
+    CHECK_EQ(p.AccentBright, std::uint32_t{ 0x42F0B3 });
+    CHECK_EQ(p.Panel, std::uint32_t{ 0x0A0B0D });
+    CHECK_EQ(p.Surface, std::uint32_t{ 0x0F1012 });
+    CHECK_EQ(p.TextPrimary, std::uint32_t{ 0xE6E8ED });
+    CHECK_EQ(p.TextMuted, std::uint32_t{ 0x80858F });
+    CHECK_EQ(p.WarnCore, std::uint32_t{ 0xF2B352 });
+    CHECK_EQ(p.RedCore, std::uint32_t{ 0xF26B5C });
     CHECK(!p.Light);
     CHECK_MSG(!p.Square && !p.Monospace, "the default became square or monospace");
 }

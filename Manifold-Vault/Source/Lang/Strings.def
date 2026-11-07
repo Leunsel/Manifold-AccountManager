@@ -670,3 +670,4 @@ BUNKER_STRING(Audit_Insecure,           "%zu addresses start with http:// – th
 BUNKER_STRING(Audit_InsecureOne,        "One address starts with http:// – the connection to it is not encrypted.")
 BUNKER_STRING(Audit_InsecureNote,       "The same address usually works with https:// too. Addresses in your home network, such as the router, do not count.")
 BUNKER_STRING(Audit_TagInsecure,        "insecure address")
+BUNKER_STRING(Settings_ThemeManifold,   "Manifold")

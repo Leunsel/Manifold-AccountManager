@@ -653,6 +653,7 @@ namespace Bunker::Lang
         .Audit_InsecureOne        = "Eine Adresse beginnt mit http:// – die Verbindung dorthin ist nicht verschlüsselt.",
         .Audit_InsecureNote       = "Meist klappt dieselbe Adresse auch mit https://. Adressen im Heimnetz, etwa der Router, zählen nicht.",
         .Audit_TagInsecure        = "unsichere Adresse",
+        .Settings_ThemeManifold   = "Manifold",
     };
 
     inline constexpr const char* kGermanWords[] = {

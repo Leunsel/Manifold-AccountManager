@@ -197,6 +197,7 @@ namespace Bunker::UI::Settings
         {
             struct Named { const char* Id; Str Name; };
             static constexpr Named kNames[] = {
+                { "manifold", Str::Settings_ThemeManifold },
                 { "arc", Str::Settings_ThemeArc },
                 { "red", Str::Settings_ThemeRedDark },
                 { "red-oled", Str::Settings_ThemeRedOled },
@@ -222,6 +223,7 @@ namespace Bunker::UI::Settings
         {
             struct Named { const char* Id; Str Name; };
             static constexpr Named kNames[] = {
+                { "manifold", Str::Settings_ThemeManifold },
                 { "arc", Str::Settings_ThemeArc },
                 { "red", Str::Settings_FamilyRed },
                 { "green", Str::Settings_FamilyGreen },
